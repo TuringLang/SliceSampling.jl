@@ -11,30 +11,41 @@ function LogDensityProblems.logdensity(gibbs::GibbsObjective, θi)
 end
 
 struct SliceState{P, L <: Real, I <: NamedTuple}
+    "current state of the slice sampling chain"
     params::P
-    lp    ::L
-    info  ::I
+
+    "log density of the current state"
+    lp::L
+
+    "information generated from the sampler"
+    info::I
 end
 
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
-                           model,
+                           model  ::AbstractMCMC.LogDensityModel,
                            sampler::AbstractGibbsSliceSampling;
                            initial_params = nothing,
                            kwargs...)
-    θ  = initial_params === nothing ? initial_sample(rng, model) : initial_params
-    lp = LogDensityProblems.logdensity(model, θ)
+    logdensitymodel = model.logdensity
+    d  = LogDensityProblems.dimension(logdensitymodel)
+    if sampler.window isa AbstractVector
+        @assert length(sampler.window) == d
+    end
+    θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
+    lp = LogDensityProblems.logdensity(logdensitymodel, θ)
     return θ, SliceState(θ, lp, NamedTuple())
 end
 
 function AbstractMCMC.step(
     rng    ::Random.AbstractRNG,
-    model, 
+    model  ::AbstractMCMC.LogDensityModel, 
     sampler::AbstractGibbsSliceSampling,
-    state  ::SliceState,
+    state  ::SliceState;
     kwargs...,
 )
+    logdensitymodel = model.logdensity
     w = if sampler.window isa Real
-        Fill(sampler.window, LogDensityProblems.dimension(model))
+        Fill(sampler.window, LogDensityProblems.dimension(logdensitymodel))
     else
         sampler.window
     end
@@ -43,7 +54,7 @@ function AbstractMCMC.step(
 
     total_props = 0
     for idx in shuffle(rng, 1:length(θ))
-        model_gibbs = GibbsObjective(model, idx, θ)
+        model_gibbs = GibbsObjective(logdensitymodel, idx, θ)
         θ′idx, ℓp, props = slice_sampling_univariate(
             rng, sampler, model_gibbs, w[idx], ℓp, θ[idx]
         )

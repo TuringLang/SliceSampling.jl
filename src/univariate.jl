@@ -1,4 +1,12 @@
 
+"""
+    Slice(window)
+
+Univariate slice sampling with a fixed initial interval (Scheme 2 by Neal[^N2003])
+
+# Fields
+- `window::Union{<:Real, <:AbstractVector}`: Proposal window.
+"""
 struct Slice{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
     window::W
 end
@@ -38,6 +46,13 @@ function slice_sampling_univariate(
 ) where {F <: Real}
     ℓy          = ℓπ - Random.randexp(rng, F)
     L, R, props = find_interval(rng, alg, model, w, ℓy, θ)
+
+    # if eltype(θ) == Float32
+    #     @assert eltype(L) == Float32
+    #     @assert eltype(R) == Float32
+    #     @assert typeof(ℓy) == Float32
+    # end
+
     while true
         U     = rand(rng, F)
         θ′     = L + U*(R - L)

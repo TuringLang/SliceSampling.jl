@@ -1,4 +1,12 @@
 
+"""
+    LatentSlice(beta)
+
+Latent slice sampling algorithm by Li and Walker[^LW2023].
+
+# Fields
+- `beta::Real`: Beta parameter of the Gamma distribution of the auxiliary variables.
+"""
 struct LatentSlice{B <: Real} <: AbstractSliceSampling
     beta::B
 end
@@ -11,25 +19,28 @@ struct LatentSliceState{V <: AbstractVector, L <: Real, I <: NamedTuple}
 end
 
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
-                           model,
+                           model  ::AbstractMCMC.LogDensityModel,
                            sampler::LatentSlice;
                            initial_params = nothing,
                            kwargs...)
+    logdensitymodel = model.logdensity
     y  = initial_params === nothing ? initial_sample(rng, model) : initial_params
     β  = sampler.beta
     d  = length(y)
-    lp = LogDensityProblems.logdensity(model, y)
-    s  = rand(rng, Gamma(2, 1/β), d)
+    lp = LogDensityProblems.logdensity(logdensitymodel, y)
+    s  = convert(Vector{eltype(y)}, rand(rng, Gamma(2, 1/β), d))
     return y, LatentSliceState(y, s, lp, NamedTuple())
 end
 
 function AbstractMCMC.step(
     rng    ::Random.AbstractRNG,
-    model, 
+    model  ::AbstractMCMC.LogDensityModel, 
     sampler::LatentSlice,
-    state  ::LatentSliceState,
+    state  ::LatentSliceState;
     kwargs...,
 )
+    logdensitymodel = model.logdensity
+
     β  = sampler.beta
     ℓp = state.lp
     y  = copy(state.y)
@@ -42,15 +53,13 @@ function AbstractMCMC.step(
     a   = l - s/2
     b   = l + s/2
 
-    @assert all(@. a ≤ y ≤ b)
-    
     props = 0
     while true
         props += 1
 
         u_y    = rand(rng, eltype(y), d)
         ystar  = a + u_y.*(b - a)
-        ℓpstar = LogDensityProblems.logdensity(model, ystar)
+        ℓpstar = LogDensityProblems.logdensity(logdensitymodel, ystar)
 
         if ℓw < ℓpstar
             ℓp = ℓpstar
