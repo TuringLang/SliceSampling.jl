@@ -3,6 +3,7 @@ module SliceSampling
 
 using AbstractMCMC
 using Accessors
+using Distributions
 using LogDensityProblems
 using SimpleUnPack
 using Random
@@ -14,6 +15,8 @@ export sample, MCMCThreads, MCMCDistributed, MCMCSerial
 export Slice, SliceSteppingOut, SliceDoublingOut
 
 abstract type AbstractSliceSampling <: AbstractMCMC.AbstractSampler end
+
+# Univariate Slice Sampling Algorithms
 
 abstract type AbstractGibbsSliceSampling <: AbstractSliceSampling end
 
@@ -27,7 +30,9 @@ include("univariate.jl")
 include("steppingout.jl")
 include("doublingout.jl")
 
+# Latent Slice Sampling 
+export LatentSlice
 
-include("latentslice.jl")
+include("latent.jl")
 
 end

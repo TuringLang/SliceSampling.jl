@@ -67,6 +67,7 @@ end
         Slice(window),
         SliceSteppingOut(window),
         SliceDoublingOut(window),
+        LatentSlice(5.0),
     ]
         @testset "determinism" begin
             θ, y  = MCMCTesting.sample_joint(Random.default_rng(), model)
