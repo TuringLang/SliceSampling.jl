@@ -1,13 +1,10 @@
 
-struct SliceSteppingOut{Win <: AbstractVector} <: AbstractGibbsSliceSampling
+struct SliceSteppingOut{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
     max_stepping_out::Int
-    window          ::Win
+    window          ::W
 end
 
-Base.show(io::IO, sampler::SliceSteppingOut) =
-    print(io, "SliceSteppingOut(max_stepping_out=$(sampler.max_stepping_out))")
-
-SliceSteppingOut(window::AbstractVector) = SliceSteppingOut(32, window)
+SliceSteppingOut(window::Union{<:AbstractVector, <:Real}) = SliceSteppingOut(32, window)
 
 function find_interval(
     rng  ::Random.AbstractRNG,

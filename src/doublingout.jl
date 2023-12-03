@@ -1,13 +1,10 @@
 
-struct SliceDoublingOut{Win <: AbstractVector} <: AbstractGibbsSliceSampling
+struct SliceDoublingOut{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
     max_doubling_out::Int
-    window          ::Win
+    window          ::W
 end
 
-Base.show(io::IO, sampler::SliceDoublingOut) =
-    print(io, "SliceDoublingOut(max_doubling_out=$(sampler.max_doubling_out))")
-
-SliceDoublingOut(window::AbstractVector) = SliceDoublingOut(8, window)
+SliceDoublingOut(window::Union{<:AbstractVector, <:Real}) = SliceDoublingOut(8, window)
 
 function find_interval(
     rng  ::Random.AbstractRNG,

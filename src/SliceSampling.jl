@@ -4,6 +4,7 @@ module SliceSampling
 using AbstractMCMC
 using Accessors
 using Distributions
+using FillArrays
 using LogDensityProblems
 using SimpleUnPack
 using Random

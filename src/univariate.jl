@@ -1,9 +1,7 @@
 
-struct Slice{Win <: AbstractVector} <: AbstractGibbsSliceSampling
-    window::Win
+struct Slice{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
+    window::W
 end
-
-Base.show(io::IO, ::Slice) = print(io, "Slice()")
 
 function find_interval(
     rng::Random.AbstractRNG,
@@ -38,12 +36,8 @@ function slice_sampling_univariate(
     ℓπ   ::Real,
     θ    ::F,
 ) where {F <: Real}
-    u  = rand(rng, F)
-    ℓy = log(u) + ℓπ
-    ℓπ0 = LogDensityProblems.logdensity(model, θ)
-
+    ℓy          = ℓπ - Random.randexp(rng, F)
     L, R, props = find_interval(rng, alg, model, w, ℓy, θ)
-
     while true
         U     = rand(rng, F)
         θ′     = L + U*(R - L)

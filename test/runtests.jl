@@ -61,12 +61,19 @@ end
 
 @testset "slice sampling" begin
     model  = Model(1.0, 1.0, [0.0])
-    window = fill(1.0, LogDensityProblems.dimension(model))
 
     @testset for sampler in [
-        Slice(window),
-        SliceSteppingOut(window),
-        SliceDoublingOut(window),
+        # Vector-valued windows
+        Slice(fill(1.0, LogDensityProblems.dimension(model))),
+        SliceSteppingOut(fill(1.0, LogDensityProblems.dimension(model))),
+        SliceDoublingOut(fill(1.0, LogDensityProblems.dimension(model))),
+
+        # Scalar-valued windows
+        Slice(1.0),
+        SliceSteppingOut(1.0),
+        SliceDoublingOut(1.0),
+
+        # Latent slice sampling
         LatentSlice(5.0),
     ]
         @testset "determinism" begin
