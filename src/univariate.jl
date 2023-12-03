@@ -58,11 +58,6 @@ function slice_sampling_univariate(
         else
             R = θ′
         end
-
-        if props > 100000
-            @info("", L, R, θ, θ′, ℓy, ℓπ′, ℓπ, ℓπ0)
-            throw()
-        end
     end
 end
 

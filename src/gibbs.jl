@@ -10,10 +10,10 @@ function LogDensityProblems.logdensity(gibbs::GibbsObjective, θi)
     LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
 end
 
-struct SliceState{S, L, I <: NamedTuple}
-    sample   ::S
-    logtarget::L
-    info     ::I
+struct SliceState{P, L <: Real, I <: NamedTuple}
+    params::P
+    lp    ::L
+    info  ::I
 end
 
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
@@ -35,8 +35,8 @@ function AbstractMCMC.step(
     kwargs...,
 )
     w  = alg.window
-    ℓp = state.logtarget
-    θ  = copy(state.sample)
+    ℓp = state.lp
+    θ  = copy(state.params)
 
     total_props = 0
     for idx in shuffle(rng, 1:length(θ))
