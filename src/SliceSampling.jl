@@ -4,7 +4,6 @@ module SliceSampling
 using AbstractMCMC
 using Accessors
 using Distributions
-using DocStringExtensions
 using FillArrays
 using LogDensityProblems
 using SimpleUnPack
