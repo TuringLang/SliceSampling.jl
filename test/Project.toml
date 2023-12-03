@@ -1,19 +1,9 @@
-name = "SliceSampling"
-uuid = "43f4d3e8-9711-4a8c-bd1b-03ac73a255cf"
-version = "0.1.0"
-
 [deps]
 AbstractMCMC = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
 Accessors = "7d9f7c33-5ae7-4f3b-8dc6-eff91059b697"
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 LogDensityProblems = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
+MCMCTesting = "9963b6a1-5d46-439c-8efc-3a487843c7fa"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
-SimpleUnPack = "ce78b400-467f-4804-87d8-8f486da07d0a"
-
-[compat]
-julia = "1.6"
-
-[extras]
+StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-
-[targets]
-test = ["Test"]

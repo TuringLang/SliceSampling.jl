@@ -1,10 +1,4 @@
 
-struct GibbsObjective{Model, Idx <: Integer, Vec <: AbstractVector}
-    model::Model
-    idx  ::Idx
-    θ    ::Vec
-end
-
 abstract type AbstractSliceSampling <: AbstractMCMC.AbstractSampler end
 
 struct SliceDoublingOut{Win <: AbstractVector} <: AbstractSliceSampling
@@ -31,9 +25,9 @@ function find_interval(
        ::GibbsObjective,
     w  ::Real,
        ::Real,
-    θ₀ ::Real,
-)
-    u = rand(rng)
+    θ₀ ::F,
+) where {F <: Real}
+    u = rand(rng, F)
     L = θ₀ - w*u
     R = L + w
     L, R, 0
@@ -45,8 +39,8 @@ function find_interval(
     model::GibbsObjective,
     w    ::Real,
     ℓy   ::Real,
-    θ₀   ::Real,
-)
+    θ₀   ::F,
+) where {F <: Real}
     #=
         Doubling out procedure for finding a slice
         (An acceptance rate < 1e-4 is treated as a potential infinite loop)
@@ -57,7 +51,7 @@ function find_interval(
     =##
     p = alg.max_doubling_out
 
-    u = rand(rng)
+    u = rand(rng, F)
     L = θ₀ - w*u
     R = L + w
 
@@ -69,7 +63,7 @@ function find_interval(
         if ((ℓy ≥ ℓπ_L) && (ℓy ≥ ℓπ_R))
             break
         end
-        v = rand(rng)
+        v = rand(rng, F)
         if v < 0.5
             L    = L - (R - L)
             ℓπ_L = LogDensityProblems.logdensity(model, L)
@@ -88,8 +82,8 @@ function find_interval(
     model::GibbsObjective,
     w    ::Real,
     ℓy   ::Real,
-    θ₀   ::Real,
-)
+    θ₀   ::F,
+) where {F <: Real}
     #=
         Stepping out procedure for finding a slice
         (An acceptance rate < 1e-4 is treated as a potential infinite loop)
@@ -100,11 +94,11 @@ function find_interval(
     =##
     m = alg.max_stepping_out
 
-    u      = rand(rng)
+    u      = rand(rng, F)
     L      = θ₀ - w*u
     R      = L + w
-    V      = rand(rng)
-    J      = floor(m*V)
+    V      = rand(rng, F)
+    J      = floor(Int, m*V)
     K      = (m - 1) - J 
     n_eval = 0
 
@@ -179,9 +173,9 @@ function slice_sampling_univariate(
     alg  ::AbstractSliceSampling,
     model::GibbsObjective, 
     w    ::Real,
-    θ₀   ::Real,
-    ℓπ₀  ::Real
-)
+    ℓπ₀  ::Real,
+    θ₀   ::F,
+) where {F <: Real}
     #=
         Univariate slice sampling kernel
         (An acceptance rate < 1e-4 is treated as a potential infinite loop)
@@ -190,16 +184,18 @@ function slice_sampling_univariate(
         "Slice Sampling," 
         Annals of Statistics, 2003.
     =##
-    u  = rand(rng)
+    u  = rand(rng, F)
     ℓy = log(u) + ℓπ₀
 
     L, R, n_prop = find_interval(rng, alg, model, w, ℓy, θ₀)
 
     while true
-        U      = rand(rng)
-        θ′      = L + U*(R - L)
-        ℓπ′     = LogDensityProblems.logdensity(model, θ′)
+        U   = rand(rng, F)
+        θ′  = L + U*(R - L)
+        ℓπ′ = LogDensityProblems.logdensity(model, θ′)
+
         n_prop += 1
+
         if (ℓy < ℓπ′) && accept_slice_proposal(alg, model, w, ℓy, θ₀, θ′, L, R)
             return θ′, ℓπ′, 1/n_prop
         end
@@ -209,38 +205,6 @@ function slice_sampling_univariate(
         else
             R = θ′
         end
-
-        if n_prop > 10000 
-            @error("Too many rejections. Something looks broken. \n θ = $(θ₀) \n ℓπ = $(ℓπ₀)")
-        end
     end
 end
 
-function slice_sampling(
-    rng      ::Random.AbstractRNG,
-    alg      ::AbstractSliceSampling,
-    model, 
-    θ        ::AbstractVector,
-)
-    w = if alg.window isa Real
-        fill(alg.window, length(θ))
-    else
-        alg.window
-    end
-    @assert length(w) == length(θ)
-
-    ℓp    = LogDensityProblems.logdensity(model, θ)
-    ∑acc  = 0.0
-    n_acc = 0
-    for idx in 1:length(θ)
-        model_gibbs = GibbsObjective(model, idx, θ)
-        θ′idx, ℓp, acc = slice_sampling_univariate(
-            rng, alg, model_gibbs, w[idx], θ[idx], ℓp
-        )
-        ∑acc  += acc
-        n_acc += 1
-        θ[idx] = θ′idx
-    end
-    avg_acc = n_acc > 0 ? ∑acc/n_acc : 1
-    θ, ℓp, avg_acc
-end
