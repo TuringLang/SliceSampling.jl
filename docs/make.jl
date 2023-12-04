@@ -25,5 +25,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/Red-Portal/SliceSampling.jl",
-    devbranch="main",
+    push_preview=true
 )
