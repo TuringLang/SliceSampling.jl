@@ -15,7 +15,11 @@ makedocs(;
         assets=String[],
     ),
     pages=[
-        "Home" => "index.md",
+        "Home"                      => "index.md",
+        "General Usage"             => "general.md",
+        #"Benchmarks"                => "benchmarks.md",
+        "Univariate Slice Sampling" => "univariate_slice.md",
+        "Latent Slice Sampling"     => "latent_slice.md"
     ],
 )
 
