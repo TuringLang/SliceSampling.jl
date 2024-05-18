@@ -1,4 +1,4 @@
-# SliceSampling
+# Implementation of slice sampling algorithms
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Red-Portal.github.io/SliceSampling.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Red-Portal.github.io/SliceSampling.jl/dev/)
