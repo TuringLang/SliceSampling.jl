@@ -1,6 +1,6 @@
 name = "SliceSampling"
 uuid = "43f4d3e8-9711-4a8c-bd1b-03ac73a255cf"
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 AbstractMCMC = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
@@ -11,6 +11,12 @@ LogDensityProblems = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SimpleUnPack = "ce78b400-467f-4804-87d8-8f486da07d0a"
 
+[weakdeps]
+Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
+
+[extensions]
+SliceSamplingTuringExt = ["Turing"]
+
 [compat]
 AbstractMCMC = "4, 5"
 Accessors = "0.1"
@@ -19,10 +25,12 @@ FillArrays = "1"
 LogDensityProblems = "2"
 Random = "1"
 SimpleUnPack = "1"
+Turing = "0.31"
 julia = "1.6"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 
 [targets]
 test = ["Test"]

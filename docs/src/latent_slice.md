@@ -1,5 +1,5 @@
 
-# Latent Slice Sampling 
+# [Latent Slice Sampling](@id latent)
 
 ## Introduction
 Latent slice sampling is a recent vector-valued slice sampling algorithm proposed by Li and Walker[^LW2023].
