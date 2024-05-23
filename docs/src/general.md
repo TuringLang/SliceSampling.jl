@@ -14,6 +14,12 @@ sample([rng,] model, slice, N; initial_params)
 - `model`: A model implementing the `LogDensityProblems` interface.
 - `N`: The number of samples
 
+The output is a `SliceSampling.Transition` object, which contains the following:
+```@docs
+SliceSampling.Transition
+```
+
+
 For the keyword arguments, `SliceSampling` allows:
 - `initial_params`: The intial state of the Markov chain (default: `nothing`).
 

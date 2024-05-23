@@ -6,6 +6,7 @@ using LogDensityProblems
 using MCMCTesting
 using Random 
 using Test
+using Turing
 using StableRNGs
 
 using SliceSampling
@@ -37,8 +38,8 @@ function MCMCTesting.markovchain_transition(
 )
     model′ = AbstractMCMC.LogDensityModel(@set model.y = y)
     _, init_state = AbstractMCMC.step(rng, model′, sampler; initial_params=copy(θ))
-    θ′, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
-    θ′
+    transition, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
+    transition.params
 end
 
 function LogDensityProblems.logdensity(model::Model{F, V}, θ) where {F <: Real, V}
@@ -91,11 +92,13 @@ end
 
             rng           = StableRNG(1)
             _, init_state = AbstractMCMC.step(rng, model′, sampler; initial_params=copy(θ))
-            θ′, _         = AbstractMCMC.step(rng, model′, sampler, init_state)
+            transition, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
+            θ′            = transition.params
 
             rng           = StableRNG(1)
             _, init_state = AbstractMCMC.step(rng, model′, sampler; initial_params=copy(θ))
-            θ′′, _         = AbstractMCMC.step(rng, model′, sampler, init_state)
+            transition, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
+            θ′′            = transition.params
             @test θ′ == θ′′
         end
 
@@ -109,7 +112,8 @@ end
             @test eltype(y) == type
 
             _, init_state = AbstractMCMC.step(rng, model′, sampler; initial_params=copy(θ))
-            θ′, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
+            transition, _ = AbstractMCMC.step(rng, model′, sampler, init_state)
+            θ′             = transition.params
 
             @test eltype(θ′) == type
         end

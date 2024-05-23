@@ -1,4 +1,9 @@
 
+struct GibbsSliceState{T <: Transition}
+    "Current [`Transition`](@ref)."
+    transition::T
+end
+
 struct GibbsObjective{Model, Idx <: Integer, Vec <: AbstractVector}
     model::Model
     idx  ::Idx
@@ -8,17 +13,6 @@ end
 function LogDensityProblems.logdensity(gibbs::GibbsObjective, θi)
     @unpack model, idx, θ = gibbs
     LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
-end
-
-struct SliceState{P, L <: Real, I <: NamedTuple}
-    "current state of the slice sampling chain"
-    params::P
-
-    "log density of the current state"
-    lp::L
-
-    "information generated from the sampler"
-    info::I
 end
 
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
@@ -33,14 +27,15 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
     end
     θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
     lp = LogDensityProblems.logdensity(logdensitymodel, θ)
-    return θ, SliceState(θ, lp, NamedTuple())
+    t  = Transition(θ, lp, NamedTuple())
+    return t, GibbsSliceState(t)
 end
 
 function AbstractMCMC.step(
     rng    ::Random.AbstractRNG,
     model  ::AbstractMCMC.LogDensityModel, 
     sampler::AbstractGibbsSliceSampling,
-    state  ::SliceState;
+    state  ::GibbsSliceState;
     kwargs...,
 )
     logdensitymodel = model.logdensity
@@ -49,8 +44,8 @@ function AbstractMCMC.step(
     else
         sampler.window
     end
-    ℓp = state.lp
-    θ  = copy(state.params)
+    ℓp = state.transition.lp
+    θ  = copy(state.transition.params)
 
     total_props = 0
     for idx in shuffle(rng, 1:length(θ))
@@ -61,6 +56,6 @@ function AbstractMCMC.step(
         total_props += props
         θ[idx] = θ′idx
     end
-
-    θ, SliceState(θ, ℓp, (num_proposals=total_props,))
+    t = Transition(θ, ℓp, (num_proposals=total_props,))
+    t, GibbsSliceState(t)
 end
