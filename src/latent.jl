@@ -11,11 +11,12 @@ struct LatentSlice{B <: Real} <: AbstractSliceSampling
     beta::B
 end
 
-struct LatentSliceState{V <: AbstractVector, L <: Real, I <: NamedTuple}
-    y   ::V
-    s   ::V
-    lp  ::L
-    info::I
+struct LatentSliceState{T <: Transition, S <: AbstractVector}
+    "Current [`Transition`](@ref)."
+    transition ::T
+
+    "Auxiliary variables for adapting the slice window (\$s\$ in the original paper[^LW2023])"
+    sliceparams::S
 end
 
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
@@ -29,7 +30,8 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
     d  = length(y)
     lp = LogDensityProblems.logdensity(logdensitymodel, y)
     s  = convert(Vector{eltype(y)}, rand(rng, Gamma(2, 1/β), d))
-    return y, LatentSliceState(y, s, lp, NamedTuple())
+    t  = Transition(y, lp, NamedTuple())
+    return t, LatentSliceState(t, s)
 end
 
 function AbstractMCMC.step(
@@ -42,9 +44,9 @@ function AbstractMCMC.step(
     logdensitymodel = model.logdensity
 
     β  = sampler.beta
-    ℓp = state.lp
-    y  = copy(state.y)
-    s  = copy(state.s)
+    ℓp = state.transition.lp
+    y  = state.transition.params
+    s  = state.sliceparams
     d  = length(y)
     ℓw = ℓp - Random.randexp(rng, eltype(y))
 
@@ -76,5 +78,6 @@ function AbstractMCMC.step(
         end
     end
     s = β*randexp(rng, eltype(y), d) + 2*abs.(l - y)
-    y, LatentSliceState(y, s, ℓp, NamedTuple())
+    t = Transition(y, ℓp, NamedTuple())
+    t, LatentSliceState(t, s)
 end

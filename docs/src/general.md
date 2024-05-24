@@ -4,6 +4,26 @@
 This package implements the `AbstractMCMC` [interface](https://github.com/TuringLang/AbstractMCMC.jl).
 `AbstractMCMC` provides a unifying interface for MCMC algorithms applied to [LogDensityProblems](https://github.com/tpapp/LogDensityProblems.jl).
 
+## Drawing Samples From `Turing` Models
+`SliceSampling.jl` can be used to sample from [Turing](https://github.com/TuringLang/Turing.jl) models through `Turing`'s `externalsampler` interface.
+See the following example of using the [latent slice sampler](@ref latent):
+
+```@example turing
+using Distributions
+using Turing
+using SliceSampling
+
+@model function demo()
+    s ~ InverseGamma(3, 3)
+    m ~ Normal(0, sqrt(s))
+end
+
+sampler   = LatentSlice(2)
+n_samples = 10000
+model     = demo()
+sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
+```
+
 ## Drawing Samples
 
 For drawing samples using the algorithms provided by `SliceSampling`, the user only needs to call:
@@ -13,6 +33,12 @@ sample([rng,] model, slice, N; initial_params)
 - `slice::AbstractSliceSampling`: Any slice sampling algorithm provided by `SliceSampling`.
 - `model`: A model implementing the `LogDensityProblems` interface.
 - `N`: The number of samples
+
+The output is a `SliceSampling.Transition` object, which contains the following:
+```@docs
+SliceSampling.Transition
+```
+
 
 For the keyword arguments, `SliceSampling` allows:
 - `initial_params`: The intial state of the Markov chain (default: `nothing`).
