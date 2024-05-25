@@ -46,6 +46,7 @@ function AbstractMCMC.step(
     end
     ℓp = state.transition.lp
     θ  = copy(state.transition.params)
+    @assert length(w) == length(θ) "window size does not match parameter size"
 
     total_props = 0
     for idx in shuffle(rng, 1:length(θ))
