@@ -6,11 +6,11 @@ DocMeta.setdocmeta!(SliceSampling, :DocTestSetup, :(using SliceSampling); recurs
 makedocs(;
     modules=[SliceSampling],
     authors="Kyurae Kim <kyrkim@seas.upenn.edu> and contributors",
-    repo="https://github.com/Red-Portal/SliceSampling.jl/blob/{commit}{path}#{line}",
+    repo="https://github.com/TuringLang/SliceSampling.jl/blob/{commit}{path}#{line}",
     sitename="SliceSampling.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://Red-Portal.github.io/SliceSampling.jl",
+        canonical="https://TuringLang.org/SliceSampling.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -23,6 +23,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/Red-Portal/SliceSampling.jl",
+    repo="github.com/TuringLang/SliceSampling.jl",
     push_preview=true
 )
