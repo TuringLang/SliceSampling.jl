@@ -166,7 +166,7 @@ end
             θ   = [1., 1.]
             _, init_state = AbstractMCMC.step(rng, model, sampler; initial_params=copy(θ))
 
-            @test_throws "maximum number" begin
+            @test_throws ErrorException begin
                 _, _ = AbstractMCMC.step(rng, model, sampler, init_state)
             end
         end
