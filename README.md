@@ -4,3 +4,6 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://TuringLang.org/SliceSampling.jl/dev/)
 [![Build Status](https://github.com/TuringLang/SliceSampling.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Red-Portal/SliceSampling.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/TuringLang/SliceSampling.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Red-Portal/SliceSampling.jl)
+
+
+For a working example, please see [here](https://turinglang.org/SliceSampling.jl/dev/general/). 
