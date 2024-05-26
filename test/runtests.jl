@@ -189,12 +189,13 @@ end
         SliceSteppingOut(1),
         SliceDoublingOut(1),
         LatentSlice(5),
+        GibbsPolarSlice(5),
     ]
         chain = sample(
             model,
             externalsampler(sampler),
             n_samples;
-            initial_params=[1.0, 0.0],
+            initial_params=[1.0, 0.1],
             progress=false,
         )
     end
