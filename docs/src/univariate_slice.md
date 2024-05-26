@@ -7,7 +7,7 @@ Since these algorithms are univariate, they are applied to each coordinate of th
 
 !!! info
     By the nature of Gibbs sampling, univariate methods mix slowly when the posterior is highly correlated.
-    Furthermore, their computational efficiency drops as the number of dimension increases.
+    Furthermore, their computational efficiency drops as the number of dimensions increases.
     As such, univariate slice sampling algorithms are best applied to low-dimensional problems with a few tens of dimensions.
 
 
@@ -22,12 +22,12 @@ Slice
 ## Adaptive Initial Interval Slice Sampling
 
 These algorithms try to adaptively set the initial interval through a simple search procedure.
-The "stepping-out" procedure grows the initial window in a linear scale, while the "doubling-out" producre grows it geometrically.
+The "stepping-out" procedure grows the initial window on a linear scale, while the "doubling-out" procedure grows it geometrically.
 `window` controls the scale of the increase.
 
 ### What Should I Use?
-This highly depends on the problem in hand.
-In general, the doubling out procedure tends to be more expensive as it requires additional log-target evaluations to decide whether to accept a proposal.
+This highly depends on the problem at hand.
+In general, the doubling-out procedure tends to be more expensive as it requires additional log-target evaluations to decide whether to accept a proposal.
 However, if the scale of the posterior varies drastically, doubling out might work better.
 In general, it is recommended to use the stepping-out procedure.
 
