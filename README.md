@@ -1,4 +1,4 @@
-# SliceSampling
+# Implementation of slice sampling algorithms
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Red-Portal.github.io/SliceSampling.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Red-Portal.github.io/SliceSampling.jl/dev/)
@@ -34,3 +34,11 @@ sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
 [^N2003]: Neal, R. M. (2003). Slice sampling. The annals of statistics, 31(3), 705-767.
 [^LW2023]: Li, Y., & Walker, S. G. (2023). A latent slice sampling algorithm. Computational Statistics & Data Analysis, 179, 107652.
 [^SHR2023]: Schär, P., Habeck, M., & Rudolf, D. (2023, July). Gibbsian polar slice sampling. In International Conference on Machine Learning.
+=======
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://TuringLang.org/SliceSampling.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://TuringLang.org/SliceSampling.jl/dev/)
+[![Build Status](https://github.com/TuringLang/SliceSampling.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Red-Portal/SliceSampling.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Coverage](https://codecov.io/gh/TuringLang/SliceSampling.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Red-Portal/SliceSampling.jl)
+
+
+For a working example, please see [here](https://turinglang.org/SliceSampling.jl/dev/general/).
