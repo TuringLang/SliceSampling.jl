@@ -74,6 +74,10 @@ include("doublingout.jl")
 export LatentSlice
 include("latent.jl")
 
+# Gibbsian Polar Slice Sampling 
+export GibbsPolarSlice
+include("gibbspolar.jl")
+
 # Turing Compatibility
 
 if !isdefined(Base, :get_extension)

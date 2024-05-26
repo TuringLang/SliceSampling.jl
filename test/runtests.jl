@@ -84,6 +84,9 @@ end
 
         # Latent slice sampling
         LatentSlice(5),
+
+        # Gibbsian polar slice sampling
+        GibbsPolarSlice(10),
     ]
         @testset "determinism" begin
             model  = Model(1.0, 1.0, [0.0])
@@ -154,6 +157,9 @@ end
 
         # Latent slice sampling
         LatentSlice(5; max_proposals=32),
+
+        # Gibbs polar slice sampling
+        GibbsPolarSlice(5; max_proposals=32),
     ]
         @testset "max proposal error" begin
             rng = Random.default_rng()
