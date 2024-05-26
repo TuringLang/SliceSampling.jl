@@ -10,7 +10,7 @@ However, unlike ESS, GPSS is applicable to any target distribution.
 
 
 ## Description
-For a $$d$$-dimensional target distribution, GPSS utilizes the following augmented target distribution:
+For a $$d$$-dimensional target distribution $$\pi$$, GPSS utilizes the following augmented target distribution:
 ```math
 \begin{aligned}
     p(x, T)      &= \varrho_{\pi}^{(0)}(x) \varrho_{\pi}^{(1)}(x) \, \operatorname{Uniform}\left(T; 0, \varrho^1(x)\right) \\
@@ -26,7 +26,7 @@ In a high-level view, GPSS operates a Gibbs sampler in the following fashion:
 T_n      &\sim \operatorname{Uniform}\left(0, \varrho^{(1)}\left(x_{n-1}\right)\right) \\
 \theta_n &\sim \operatorname{Uniform}\left\{ \theta \in \mathbb{S}^{d-1} \mid \varrho^{(1)}\left(r_{n-1} \theta\right) > T_n \right\} \\
 r_n      &\sim \operatorname{Uniform}\left\{ r \in \mathbb{R}_{\geq 0} \mid \varrho^{(1)}\left(r \theta_n\right) > T_n \right\} \\
-x      &= \theta r,
+x_n      &= \theta_n r_n,
 \end{aligned}
 ```
 where $$T_n$$ is the usual acceptance threshold auxiliary variable, while $$\theta$$ and $$r$$ are the sampler states in polar coordinates.
@@ -51,7 +51,9 @@ GibbsPolarSlice
 ```
 
 ## Demonstration
-As illustrated in the original paper, GPSS shows good performance on heavy-tailed targets despite being a multivariate slice sampler:
+As illustrated in the original paper, GPSS shows good performance on heavy-tailed targets despite being a multivariate slice sampler.
+Consider a 10-dimensional Student-$$t$$ target with 1-degree of freedom (this corresponds to a multivariate Cauchy):
+
 ```@example gpss
 using Distributions
 using Turing
@@ -64,12 +66,17 @@ using Plots
 end
 model = demo()
 
-n_samples = 10000
-chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=ones(10))
-histogram(chain[:,1,:], xlims=[-10,10])
-savefig("cauchy_gpss.svg")
+n_samples = 1000
+latent_chain = sample(model, externalsampler(LatentSlice(10)), n_samples; initial_params=ones(10))
+polar_chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=ones(10))
+stephist( rand(TDist(1), 10000),  bins=-10:1:10, normed=true, label="true", linewidth=3)
+stephist!(latent_chain[:,1,:], bins=-10:1:10, fill=true, alpha=0.5, normed=true, label="LSS")
+stephist!(polar_chain[:,1,:],  bins=-10:1:10, fill=true, alpha=0.5, normed=true, label="GPSS")
+savefig("student_latent_gpss.svg")
 ```
-![](cauchy_gpss.svg)
+![](student_latent_gpss.svg)
+
+Clearly, for 1000 samples, GPSS is mixing much quicker than the [latent slice sampler](@ref latent) (LSS) at a similar per-iteration cost.
 
 
 [^SHR2023]: Schär, P., Habeck, M., & Rudolf, D. (2023, July). Gibbsian polar slice sampling. In International Conference on Machine Learning.

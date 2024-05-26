@@ -9,9 +9,9 @@ This package implements slice sampling algorithms accessible through the `Abstra
 For general usage, please refer to [here](https://turinglang.org/SliceSampling.jl/dev/general/).
 
 ## Implemented Algorithms
-- [Univariate slice sampling](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/) algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
-- [Latent slice sampling](https://turinglang.org/SliceSampling.jl/dev/latent_slice/) by Li and Walker[^LW2023]
-- [Gibbsian polar slice sampling](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
+- Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
+- Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023]
+- Gibbsian polar slice sampling ([GPSS](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/)) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
 
 ## Example with Turing Models
 This package supports the [Turing](https://github.com/TuringLang/Turing.jl) probabilistic programming framework:
