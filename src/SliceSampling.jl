@@ -52,7 +52,7 @@ function initial_sample end
 function exceeded_max_prop(max_prop::Int)
     error("Exceeded maximum number of proposal $(max_prop).\n", 
           "Here are possible causes:\n",
-          "- The model might be broken or pathologic.",
+          "- The model might be broken or pathologic.\n",
           "- There might be a bug in the sampler.")
 end
 
