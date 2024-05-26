@@ -126,7 +126,6 @@ function radius_shrinkage(
 
         n_props += 1
         if n_props > max_prop
-            @info("", r_min, r_max, θ)
             exceeded_max_prop(max_prop)
         end
     end

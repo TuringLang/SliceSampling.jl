@@ -144,7 +144,7 @@ function LogDensityProblems.capabilities(::Type{<:WrongModel})
 end
 
 function LogDensityProblems.dimension(::WrongModel)
-    1
+    2
 end
 
 @testset "error handling" begin
@@ -163,7 +163,7 @@ end
     ]
         @testset "max proposal error" begin
             rng = Random.default_rng()
-            θ   = [1.,]
+            θ   = [1., 1.]
             _, init_state = AbstractMCMC.step(rng, model, sampler; initial_params=copy(θ))
 
             @test_throws "maximum number" begin
