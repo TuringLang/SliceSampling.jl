@@ -5,6 +5,7 @@ using AbstractMCMC
 using Accessors
 using Distributions
 using FillArrays
+using LinearAlgebra
 using LogDensityProblems
 using SimpleUnPack
 using Random
@@ -48,6 +49,13 @@ Return the initial sample for the `model` using the random number generator `rng
 """
 function initial_sample end
 
+function exceeded_max_prop(max_prop::Int)
+    error("Exceeded maximum number of proposal $(max_prop).\n", 
+          "Here are possible causes:\n",
+          "- The model might be broken or pathologic.",
+          "- There might be a bug in the sampler.")
+end
+
 # Univariate Slice Sampling Algorithms
 export Slice, SliceSteppingOut, SliceDoublingOut
 
@@ -64,7 +72,6 @@ include("doublingout.jl")
 
 # Latent Slice Sampling 
 export LatentSlice
-
 include("latent.jl")
 
 # Turing Compatibility

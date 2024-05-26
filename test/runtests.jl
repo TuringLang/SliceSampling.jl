@@ -69,7 +69,7 @@ function LogDensityProblems.dimension(model::Model)
     2
 end
 
-@testset "slice sampling" begin
+@testset "sampling" begin
     model   = Model(1., 1., [0.])
     @testset for sampler in [
         # Vector-valued windows
@@ -128,6 +128,41 @@ end
             model   = Model(1., 1., [0.])
             subject = TestSubject(model, sampler)
             @test seqmcmctest(test, subject, 0.001, n_pvalue_samples; show_progress=false)
+        end
+    end
+end
+
+struct WrongModel end
+
+LogDensityProblems.logdensity(::WrongModel, θ) = -Inf
+
+function LogDensityProblems.capabilities(::Type{<:WrongModel})
+    LogDensityProblems.LogDensityOrder{0}()
+end
+
+function LogDensityProblems.dimension(::WrongModel)
+    1
+end
+
+@testset "error handling" begin
+    model = AbstractMCMC.LogDensityModel(WrongModel())
+    @testset for sampler in [
+        # Univariate slice samplers
+        Slice(1; max_proposals=32),
+        SliceSteppingOut(1; max_proposals=32),
+        SliceDoublingOut(1; max_proposals=32),
+
+        # Latent slice sampling
+        LatentSlice(5; max_proposals=32),
+    ]
+        @testset "max proposal error" begin
+            rng = Random.default_rng()
+            θ   = [1.,]
+            _, init_state = AbstractMCMC.step(rng, model, sampler; initial_params=copy(θ))
+
+            @test_throws "maximum number" begin
+                _, _ = AbstractMCMC.step(rng, model, sampler, init_state)
+            end
         end
     end
 end
