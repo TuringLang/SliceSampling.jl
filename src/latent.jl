@@ -4,12 +4,18 @@
 
 Latent slice sampling algorithm by Li and Walker[^LW2023].
 
-# Fields
+# Arguments
 - `beta::Real`: Beta parameter of the Gamma distribution of the auxiliary variables.
+
+# Keyword Arguments
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
 """
 struct LatentSlice{B <: Real} <: AbstractSliceSampling
-    beta::B
+    beta         ::B
+    max_proposals::Int
 end
+
+LatentSlice(beta::Real; max_proposals::Int = typemax(Int)) = LatentSlice(beta, max_proposals)
 
 struct LatentSliceState{T <: Transition, S <: AbstractVector}
     "Current [`Transition`](@ref)."
@@ -42,6 +48,7 @@ function AbstractMCMC.step(
     kwargs...,
 )
     logdensitymodel = model.logdensity
+    max_proposals   = sampler.max_proposals 
 
     β  = sampler.beta
     ℓp = state.transition.lp
@@ -69,6 +76,10 @@ function AbstractMCMC.step(
             break
         end
 
+        if props > max_proposals
+            exceeded_max_prop(max_proposals)
+        end
+
         @inbounds for i = 1:d
             if ystar[i] < y[i]
                 a[i] = ystar[i]
@@ -78,6 +89,6 @@ function AbstractMCMC.step(
         end
     end
     s = β*randexp(rng, eltype(y), d) + 2*abs.(l - y)
-    t = Transition(y, ℓp, NamedTuple())
+    t = Transition(y, ℓp, (num_proposals = props,))
     t, LatentSliceState(t, s)
 end

@@ -1,20 +1,29 @@
 
 """
-    SliceDoublingOut(max_doubling_out, window)
-    SliceDoublingOut(window)
+    SliceDoublingOut(window; max_doubling_out, max_proposals)
 
 Univariate slice sampling by automatically adapting the initial interval through the "doubling-out" procedure (Scheme 4 by Neal[^N2003])
 
-# Fields
-- `max_doubling_out`: Maximum number of "doubling outs" (default: 8).
+# Arguments
 - `window::Union{<:Real, <:AbstractVector}`: Proposal window.
+
+# Keyword Arguments
+- `max_doubling_out`: Maximum number of "doubling outs" (default: 8).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
 """
 struct SliceDoublingOut{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
-    max_doubling_out::Int
     window          ::W
+    max_doubling_out::Int
+    max_proposals   ::Int
 end
 
-SliceDoublingOut(window::Union{<:AbstractVector, <:Real}) = SliceDoublingOut(8, window)
+function SliceDoublingOut(
+    window          ::Union{<:AbstractVector, <:Real};
+    max_doubling_out::Int = 8,
+    max_proposals   ::Int = typemax(Int),
+)
+    SliceDoublingOut(window, max_doubling_out, max_proposals)
+end
 
 function find_interval(
     rng  ::Random.AbstractRNG,

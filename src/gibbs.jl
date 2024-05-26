@@ -38,6 +38,7 @@ function AbstractMCMC.step(
     state  ::GibbsSliceState;
     kwargs...,
 )
+    max_prop = sampler.max_proposals
     logdensitymodel = model.logdensity
     w = if sampler.window isa Real
         Fill(sampler.window, LogDensityProblems.dimension(logdensitymodel))
@@ -48,15 +49,15 @@ function AbstractMCMC.step(
     θ  = copy(state.transition.params)
     @assert length(w) == length(θ) "window size does not match parameter size"
 
-    total_props = 0
+    n_props = zeros(Int, length(θ))
     for idx in shuffle(rng, 1:length(θ))
         model_gibbs = GibbsObjective(logdensitymodel, idx, θ)
         θ′idx, ℓp, props = slice_sampling_univariate(
-            rng, sampler, model_gibbs, w[idx], ℓp, θ[idx]
+            rng, sampler, model_gibbs, w[idx], ℓp, θ[idx], max_prop,
         )
-        total_props += props
-        θ[idx] = θ′idx
+        n_props[idx] = props
+        θ[idx]       = θ′idx
     end
-    t = Transition(θ, ℓp, (num_proposals=total_props,))
+    t = Transition(θ, ℓp, (num_proposals=n_props,))
     t, GibbsSliceState(t)
 end

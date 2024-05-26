@@ -15,10 +15,11 @@ makedocs(;
         assets=String[],
     ),
     pages=[
-        "Home"                      => "index.md",
-        "General Usage"             => "general.md",
-        "Univariate Slice Sampling" => "univariate_slice.md",
-        "Latent Slice Sampling"     => "latent_slice.md"
+        "Home"                          => "index.md",
+        "General Usage"                 => "general.md",
+        "Univariate Slice Sampling"     => "univariate_slice.md",
+        "Latent Slice Sampling"         => "latent_slice.md",
+        "Gibbsian Polar Slice Sampling" => "gibbs_polar.md"
     ],
 )
 

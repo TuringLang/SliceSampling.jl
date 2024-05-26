@@ -15,9 +15,9 @@ where $$y$$ is the parameters of the log-target $$\pi$$, $$s$$ is the width of t
 Naturally, the sampler operates as a blocked-Gibbs sampler 
 ```math
 \begin{aligned}
-l &\sim \operatorname{Uniform}\left(l; \; y - s/2,\, y + s/2\right) \\
-s &\sim p(s \mid y, l) \\
-y &\sim \operatorname{slice-sampler}\left(y \mid s, l\right),
+l_n &\sim \operatorname{Uniform}\left(l; \; y_{n-1} - s_{n-1}/2,\, y_{n-1} + s_{n-1}/2\right) \\
+s_n &\sim p(s \mid y_{n-1}, l_{n}) \\
+y_n &\sim \operatorname{shrinkage}\left(y \mid s_n, l_n\right),
 \end{aligned}
 ```
 where $$y$$ is updated using the shrinkage procedure by Neal[^N2003] using the initial interval formed by $$(s, l)$$.
