@@ -6,6 +6,7 @@
 [![Coverage](https://codecov.io/gh/Red-Portal/SliceSampling.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Red-Portal/SliceSampling.jl)
 
 This package implements slice sampling algorithms accessible through the the `AbstractMCMC` [interface](https://github.com/TuringLang/AbstractMCMC.jl).
+For general usage, please refer to [here](https://turinglang.org/SliceSampling.jl/dev/general/).
 
 ## Implemented Algorithms
 - Univariate slice sampling algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
@@ -40,5 +41,3 @@ sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
 [![Build Status](https://github.com/TuringLang/SliceSampling.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Red-Portal/SliceSampling.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/TuringLang/SliceSampling.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Red-Portal/SliceSampling.jl)
 
-
-For a working example, please see [here](https://turinglang.org/SliceSampling.jl/dev/general/).
