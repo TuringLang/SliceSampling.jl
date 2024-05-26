@@ -45,7 +45,10 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
                            kwargs...)
     logdensitymodel = model.logdensity
     x  = initial_params === nothing ? initial_sample(rng, model) : initial_params
-    r  = norm(x)
+    d  = length(x)
+    @assert d ≥ 2 "Gibbsian polar slice sampling works reliably only in dimension ≥2"
+
+    r  = max(norm(x), convert(eltype(x), 1e-5))
     θ  = x / r
     ℓp = LogDensityProblems.logdensity(logdensitymodel, x)
     t  = Transition(x, ℓp, NamedTuple())
@@ -56,7 +59,7 @@ function rand_subsphere(rng::Random.AbstractRNG, θ::AbstractVector)
     d  = length(θ)
     V1 = randn(rng, eltype(θ), d)
     V2 = V1 - dot(θ, V1)*θ
-    V2 / norm(V2)
+    V2 / max(norm(V2), eps(eltype(θ)))
 end
 
 function geodesic_shrinkage(
@@ -123,6 +126,7 @@ function radius_shrinkage(
 
         n_props += 1
         if n_props > max_prop
+            @info("", r_min, r_max, θ)
             exceeded_max_prop(max_prop)
         end
     end
