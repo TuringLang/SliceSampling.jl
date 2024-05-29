@@ -10,7 +10,6 @@ Since these algorithms are univariate, they are applied to each coordinate of th
     Furthermore, their computational efficiency drops as the number of dimensions increases.
     As such, univariate slice sampling algorithms are best applied to low-dimensional problems with a few tens of dimensions.
 
-
 ## Fixed Initial Interval Slice Sampling 
 This is the most basic form of univariate slice sampling, where the proposals are generated within a fixed interval formed by the `window`.
 
@@ -36,4 +35,53 @@ SliceSteppingOut
 SliceDoublingOut
 ```
 
-[^N2003]: Neal, R. M. (2003). Slice sampling. The annals of statistics, 31(3), 705-767.
+## Combining Univariate Samplers for Multivariate Targets
+To use univariate slice sampling strategies on targets with more than on dimension, one has to embed them into a multivariate sampling scheme that relies on univariate sampling elements.
+The two most popular approaches for this are Gibbs sampling[^GG1984] hit-and-run[^BRS1993].
+
+### Random Permutation Gibbs Strategy
+Gibbs sampling[^GG1984] is a simple strategy where we sample a coordinate at a time, conditioned on the values of all other coordinates.
+That is, assuming the we sample directly from the target distribution $$\pi$$ over its coordinates $$x_1, \ldots, x_d$$, we are approximating the sampling process
+```math
+\begin{aligned}
+x_1      &\sim \pi(x_1 \mid x_2, \ldots, x_d ) \\
+&\vdots \\
+x_i      &\sim \pi(x_i \mid x_1, \ldots x_{-i} \ldots, x_d ) \\
+&\vdots \\
+x_d      &\sim \pi(x_d \mid x_1, x_{d-1} ).
+\end{aligned}
+```
+In practice, one can pick the coordinates in arbitrary order as long as it does not depend on the state of the chain.
+It is generally hard to know a-prior which ``scan order'' is best, but randomly picking coordinates tend to work well in general:
+
+```@docs
+RandPermGibbs
+```
+
+### Hit-and-Run Strategy
+Hit-and-run is a simple ``meta''-algorithm, where we sample over a random 1-dimensional projection of the space.
+That is, at each iteration, we sample a random direction
+```math
+    \theta \sim \operatorname{Uniform}(\mathbb{S}^{d-1}),
+```
+and sample along the 1-dimensional subspace
+```
+\begin{aligned}
+    \lambda &\sim p\left(\lambda \mid x_{n-1}, \theta \right) = \pi\left( x_{n-1} + \lambda \theta \right) \\
+    x_{n} &= x_{n-1} + \lambda \theta
+\end{aligned}
+```
+Applying slice sampling for the 1-dimensional subproblem has been popularized by David Mackay[^M2003].
+Unlike Gibbs sampling, which only makes axis-aligned moves, hit-and-run can choose arbitrary directions, which could be helpful in some cases.
+
+```@docs
+HitAndRun
+```
+
+Unlike `RandPermGibbs`, `HitAndRun` does not provide the option of using a unique `unislice` object for each coordinate.
+This is a natural limitation of the hit-and-run sampler: it does not operate on individual coordinates.
+
+[^N2003]: Neal, R. M. (2003). Slice sampling. The Annals of Statistics, 31(3), 705-767.
+[^GG1984]: Geman, S., & Geman, D. (1984). Stochastic relaxation, Gibbs distributions, and the Bayesian restoration of images. IEEE Transactions on Pattern Analysis and Machine Intelligence, (6).
+[^BRS1993]: Bélisle, C. J., Romeijn, H. E., & Smith, R. L. (1993). Hit-and-run algorithms for generating multivariate distributions. Mathematics of Operations Research, 18(2), 255-266.
+[^M2003]: MacKay, D. J. (2003). Information theory, inference and learning algorithms. Cambridge university press.

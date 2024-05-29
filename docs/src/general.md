@@ -6,7 +6,7 @@ This package implements the `AbstractMCMC` [interface](https://github.com/Turing
 
 ## Drawing Samples From `Turing` Models
 `SliceSampling.jl` can be used to sample from [Turing](https://github.com/TuringLang/Turing.jl) models through `Turing`'s `externalsampler` interface.
-See the following example of using the [latent slice sampler](@ref latent):
+See the following example:
 
 ```@example turing
 using Distributions
@@ -18,7 +18,7 @@ using SliceSampling
     m ~ Normal(0, sqrt(s))
 end
 
-sampler   = LatentSlice(2)
+sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
 sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
