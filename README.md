@@ -10,7 +10,10 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
 
 ## Implemented Algorithms
 ### Univariate Slice Sampling Algorithms
-- Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
+- Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms by R. Neal [^N2003]:
+  - Fixed window
+  - stepping-out window adaptation
+  - doubling-out window adaptation
 
 ### Univariate-to-Multivariate Strategies
 - Random Permutation coordinate-wise Gibbs sampling[^GG1984]
