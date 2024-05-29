@@ -1,5 +1,4 @@
 
-
 """
     SliceSteppingOut(window)
     SliceSteppingOut(window; max_stepping_out, max_proposals)
@@ -7,23 +6,24 @@
 Univariate slice sampling by automatically adapting the initial interval through the "stepping-out" procedure (Scheme 3 by Neal[^N2003])
 
 # Arguments
-- `window::Union{<:Real, <:AbstractVector}`: Proposal window.
+- `window::Real`: Proposal window.
 
 # Keyword Arguments
 - `max_stepping_out::Int`: Maximum number of "stepping outs" (default: 32).
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
 """
-struct SliceSteppingOut{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
+struct SliceSteppingOut{W <: Real} <: AbstractUnivariateSliceSampling
     window          ::W
     max_stepping_out::Int
     max_proposals   ::Int
 end
 
 function SliceSteppingOut(
-    window          ::Union{<:AbstractVector, <:Real};
+    window          ::Real;
     max_stepping_out::Int = 32,
     max_proposals   ::Int = typemax(Int),
 )
+    @assert window > 0
     SliceSteppingOut(window, max_stepping_out, max_proposals)
 end
 
