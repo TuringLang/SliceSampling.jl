@@ -13,8 +13,8 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
 - Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
 
 ### Univariate-to-Multivariate Strategies
-- Random Permutation coordinate-wise Gibbs sampling
-- Hit-and-run sampling
+- Random Permutation coordinate-wise Gibbs sampling[^GG1984]
+- Hit-and-run sampling[^BRS1993]
 
 ### Multivariate Slice Sampling Algorithms
 - Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023]
@@ -42,5 +42,5 @@ sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
 [^N2003]: Neal, R. M. (2003). Slice sampling. The annals of statistics, 31(3), 705-767.
 [^LW2023]: Li, Y., & Walker, S. G. (2023). A latent slice sampling algorithm. Computational Statistics & Data Analysis, 179, 107652.
 [^SHR2023]: Schär, P., Habeck, M., & Rudolf, D. (2023, July). Gibbsian polar slice sampling. In International Conference on Machine Learning.
-
-
+[^GG1984]: Geman, S., & Geman, D. (1984). Stochastic relaxation, Gibbs distributions, and the Bayesian restoration of images. IEEE Transactions on Pattern Analysis and Machine Intelligence, (6).
+[^BRS1993]: Bélisle, C. J., Romeijn, H. E., & Smith, R. L. (1993). Hit-and-run algorithms for generating multivariate distributions. Mathematics of Operations Research, 18(2), 255-266.

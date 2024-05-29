@@ -35,23 +35,13 @@ SliceSteppingOut
 SliceDoublingOut
 ```
 
-## Combining Univariate Samplers for Multivariate Targets
+## Univariate-to-Multivariate Strategies
 To use univariate slice sampling strategies on targets with more than on dimension, one has to embed them into a multivariate sampling scheme that relies on univariate sampling elements.
 The two most popular approaches for this are Gibbs sampling[^GG1984] hit-and-run[^BRS1993].
 
 ### Random Permutation Gibbs Strategy
 Gibbs sampling[^GG1984] is a simple strategy where we sample a coordinate at a time, conditioned on the values of all other coordinates.
-That is, assuming the we sample directly from the target distribution $$\pi$$ over its coordinates $$x_1, \ldots, x_d$$, we are approximating the sampling process
-```math
-\begin{aligned}
-x_1      &\sim \pi(x_1 \mid x_2, \ldots, x_d ) \\
-&\vdots \\
-x_i      &\sim \pi(x_i \mid x_1, \ldots x_{-i} \ldots, x_d ) \\
-&\vdots \\
-x_d      &\sim \pi(x_d \mid x_1, x_{d-1} ).
-\end{aligned}
-```
-In practice, one can pick the coordinates in arbitrary order as long as it does not depend on the state of the chain.
+In practice, one can pick the coordinates in any order they want as long as it does not depend on the state of the chain.
 It is generally hard to know a-prior which ``scan order'' is best, but randomly picking coordinates tend to work well in general:
 
 ```@docs
@@ -65,7 +55,7 @@ That is, at each iteration, we sample a random direction
     \theta \sim \operatorname{Uniform}(\mathbb{S}^{d-1}),
 ```
 and sample along the 1-dimensional subspace
-```
+```math
 \begin{aligned}
     \lambda &\sim p\left(\lambda \mid x_{n-1}, \theta \right) = \pi\left( x_{n-1} + \lambda \theta \right) \\
     x_{n} &= x_{n-1} + \lambda \theta
