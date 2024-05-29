@@ -5,20 +5,21 @@
 Univariate slice sampling with a fixed initial interval (Scheme 2 by Neal[^N2003])
 
 # Arguments
-- `window::Union{<:Real, <:AbstractVector}`: Proposal window.
+- `window::Real`: Proposal window.
 
 # Keyword Arguments
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
 """
-struct Slice{W <: Union{<:AbstractVector, <:Real}} <: AbstractGibbsSliceSampling
+struct Slice{W <: Real} <: AbstractUnivariateSliceSampling
     window       ::W
     max_proposals::Int
 end
 
 function Slice(
-    window       ::Union{<:AbstractVector, <:Real};
+    window       ::Real;
     max_proposals::Int = typemax(Int), 
 )
+    @assert window > 0
     Slice(window, max_proposals)
 end
 
@@ -48,14 +49,13 @@ accept_slice_proposal(
 ) = true
 
 function slice_sampling_univariate(
-    rng     ::Random.AbstractRNG,
-    alg     ::AbstractSliceSampling,
-    model, 
-    w       ::Real,
-    ℓπ      ::Real,
-    θ       ::F,
-    max_prop::Int,
+    rng   ::Random.AbstractRNG,
+    alg   ::AbstractSliceSampling,
+    model,
+    ℓπ    ::Real,
+    θ     ::F,
 ) where {F <: Real}
+    w, max_prop = alg.window, alg.max_proposals
     ℓy          = ℓπ - Random.randexp(rng, F)
     L, R, props = find_interval(rng, alg, model, w, ℓy, θ)
 

@@ -9,7 +9,14 @@ This package implements slice sampling algorithms accessible through the `Abstra
 For general usage, please refer to [here](https://turinglang.org/SliceSampling.jl/dev/general/).
 
 ## Implemented Algorithms
+### Univariate Slice Sampling Algorithms
 - Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms with coordinate-wise Gibbs sampling by R. Neal [^N2003].
+
+### Univariate-to-Multivariate Strategies
+- Random Permutation coordinate-wise Gibbs sampling
+- Hit-and-run sampling
+
+### Multivariate Slice Sampling Algorithms
 - Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023]
 - Gibbsian polar slice sampling ([GPSS](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/)) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
 
@@ -26,7 +33,7 @@ using SliceSampling
     m ~ Normal(0, sqrt(s))
 end
 
-sampler   = LatentSlice(2)
+sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
 sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])

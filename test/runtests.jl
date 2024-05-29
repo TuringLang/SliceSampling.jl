@@ -73,14 +73,18 @@ end
     model   = Model(1., 1., [0.])
     @testset for sampler in [
         # Vector-valued windows
-        Slice(fill(1, LogDensityProblems.dimension(model))),
-        SliceSteppingOut(fill(1, LogDensityProblems.dimension(model))),
-        SliceDoublingOut(fill(1, LogDensityProblems.dimension(model))),
+        RandPermGibbs(Slice.(fill(1, LogDensityProblems.dimension(model)))),
+        RandPermGibbs(SliceSteppingOut.(fill(1, LogDensityProblems.dimension(model)))),
+        RandPermGibbs(SliceDoublingOut.(fill(1, LogDensityProblems.dimension(model)))),
 
         # Scalar-valued windows
-        Slice(1),
-        SliceSteppingOut(1),
-        SliceDoublingOut(1),
+        RandPermGibbs(Slice(1)),
+        RandPermGibbs(SliceSteppingOut(1)),
+        RandPermGibbs(SliceDoublingOut(1)),
+
+        HitAndRun(Slice(1)),
+        HitAndRun(SliceSteppingOut(1)),
+        HitAndRun(SliceDoublingOut(1)),
 
         # Latent slice sampling
         LatentSlice(5),
@@ -151,9 +155,13 @@ end
     model = AbstractMCMC.LogDensityModel(WrongModel())
     @testset for sampler in [
         # Univariate slice samplers
-        Slice(1; max_proposals=32),
-        SliceSteppingOut(1; max_proposals=32),
-        SliceDoublingOut(1; max_proposals=32),
+        RandPermGibbs(Slice(1; max_proposals=32)),
+        RandPermGibbs(SliceSteppingOut(1; max_proposals=32)),
+        RandPermGibbs(SliceDoublingOut(1; max_proposals=32)),
+
+        HitAndRun(Slice(1; max_proposals=32)),
+        HitAndRun(SliceSteppingOut(1; max_proposals=32)),
+        HitAndRun(SliceDoublingOut(1; max_proposals=32)),
 
         # Latent slice sampling
         LatentSlice(5; max_proposals=32),
@@ -185,9 +193,12 @@ end
     model     = demo()
 
     @testset for sampler in [
-        Slice(1),
-        SliceSteppingOut(1),
-        SliceDoublingOut(1),
+        RandPermGibbs(Slice(1)),
+        RandPermGibbs(SliceSteppingOut(1)),
+        RandPermGibbs(SliceDoublingOut(1)),
+        HitAndRun(Slice(1)),
+        HitAndRun(SliceSteppingOut(1)),
+        HitAndRun(SliceDoublingOut(1)),
         LatentSlice(5),
         GibbsPolarSlice(5),
     ]

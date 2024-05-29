@@ -56,19 +56,29 @@ function exceeded_max_prop(max_prop::Int)
           "- There might be a bug in the sampler.")
 end
 
-# Univariate Slice Sampling Algorithms
+## Univariate Slice Sampling Algorithms
 export Slice, SliceSteppingOut, SliceDoublingOut
 
-abstract type AbstractGibbsSliceSampling <: AbstractSliceSampling end
+abstract type AbstractUnivariateSliceSampling <: AbstractSliceSampling  end
 
 function accept_slice_proposal end
 
 function find_interval end
 
-include("gibbs.jl")
 include("univariate.jl")
 include("steppingout.jl")
 include("doublingout.jl")
+
+
+## Multivariate slice sampling algorithms
+abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling  end
+
+# Univariate-to-Multivariate Strategies 
+export RandPermGibbs, HitAndRun
+
+include("gibbsgeneral.jl")
+include("randpermgibbs.jl")
+include("hitandrun.jl")
 
 # Latent Slice Sampling 
 export LatentSlice
