@@ -1,6 +1,5 @@
 
 """
-    SliceSteppingOut(window)
     SliceSteppingOut(window; max_stepping_out, max_proposals)
 
 Univariate slice sampling by automatically adapting the initial interval through the "stepping-out" procedure (Scheme 3 by Neal[^N2003])

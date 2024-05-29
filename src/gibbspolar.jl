@@ -47,8 +47,10 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
     x  = initial_params === nothing ? initial_sample(rng, model) : initial_params
     d  = length(x)
     @assert d ≥ 2 "Gibbsian polar slice sampling works reliably only in dimension ≥2"
-
-    r  = max(norm(x), convert(eltype(x), 1e-5))
+    r  = norm(x)
+    if r < 1e-5
+        @warn "The norm of initial_params is smaller than 1e-5, which might be result in unstable behavior and the sampler might even get stuck indefinitely."
+    end
     θ  = x / r
     ℓp = LogDensityProblems.logdensity(logdensitymodel, x)
     t  = Transition(x, ℓp, NamedTuple())
