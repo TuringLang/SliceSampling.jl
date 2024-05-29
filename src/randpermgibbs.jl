@@ -6,9 +6,10 @@ Random permutation coordinate-wise Gibbs sampling strategy.
 This applies `unislice` coordinate-wise in a random order.
 
 # Arguments
-- `unislice`: Univariate slice sampling algorithm.
+- `unislice::Union{<:AbstractUnivariateSliceSampling,<:AbstractVector{<:AbstractUnivariateSliceSampling}}`: a single or a vector of univariate slice sampling algorithms.
 
-`unislice` can also be a vector of univeriate slice samplers, where each slice sampler is applied to each corresponding coordinate of the target posterior.
+When `unislice` is a vector of samplers, each slice sampler is applied to the corresponding coordinate of the target posterior.
+Furthermore, the `length(unislice)` must match the dimensionality of the posterior.
 """
 struct RandPermGibbs{
     S <: Union{

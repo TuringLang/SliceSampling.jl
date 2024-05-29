@@ -16,7 +16,7 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
   - doubling-out window adaptation
 
 ### Univariate-to-Multivariate Strategies
-- Random Permutation coordinate-wise Gibbs sampling[^GG1984]
+- Random permutation coordinate-wise Gibbs sampling[^GG1984]
 - Hit-and-run sampling[^BRS1993]
 
 ### Multivariate Slice Sampling Algorithms

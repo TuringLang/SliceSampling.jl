@@ -39,7 +39,6 @@ The output is a `SliceSampling.Transition` object, which contains the following:
 SliceSampling.Transition
 ```
 
-
 For the keyword arguments, `SliceSampling` allows:
 - `initial_params`: The intial state of the Markov chain (default: `nothing`).
 
@@ -52,11 +51,10 @@ SliceSampling.initial_sample
 For more fined-grained control, the user can call `AbstractMCMC.step`.
 That is, the chain can be initialized by calling:
 ```julia
-param, state = AbstractMCMC.steps([rng,] model, slice; initial_params)
+transition, state = AbstractMCMC.steps([rng,] model, slice; initial_params)
 ```
 and then each MCMC transition on `state` can be performed by calling:
 ```julia
-param, state = AbstractMCMC.steps([rng,] model, slice, state)
+transition, state = AbstractMCMC.steps([rng,] model, slice, state)
 ```
-
 For more details, refer to the documentation of `AbstractMCMC`.
