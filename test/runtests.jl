@@ -82,6 +82,10 @@ end
         RandPermGibbs(SliceSteppingOut(1)),
         RandPermGibbs(SliceDoublingOut(1)),
 
+        HitAndRun(Slice(1)),
+        HitAndRun(SliceSteppingOut(1)),
+        HitAndRun(SliceDoublingOut(1)),
+
         # Latent slice sampling
         LatentSlice(5),
 
@@ -155,6 +159,10 @@ end
         RandPermGibbs(SliceSteppingOut(1; max_proposals=32)),
         RandPermGibbs(SliceDoublingOut(1; max_proposals=32)),
 
+        HitAndRun(Slice(1; max_proposals=32)),
+        HitAndRun(SliceSteppingOut(1; max_proposals=32)),
+        HitAndRun(SliceDoublingOut(1; max_proposals=32)),
+
         # Latent slice sampling
         LatentSlice(5; max_proposals=32),
 
@@ -188,6 +196,9 @@ end
         RandPermGibbs(Slice(1)),
         RandPermGibbs(SliceSteppingOut(1)),
         RandPermGibbs(SliceDoublingOut(1)),
+        HitAndRun(Slice(1)),
+        HitAndRun(SliceSteppingOut(1)),
+        HitAndRun(SliceDoublingOut(1)),
         LatentSlice(5),
         GibbsPolarSlice(5),
     ]

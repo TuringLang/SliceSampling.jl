@@ -73,11 +73,12 @@ include("doublingout.jl")
 ## Multivariate slice sampling algorithms
 abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling  end
 
-# Gibbs strategies
-export RandPermGibbs
+# Univariate-to-Multivariate Strategies 
+export RandPermGibbs, HitAndRun
 
 include("gibbsgeneral.jl")
 include("randpermgibbs.jl")
+include("hitandrun.jl")
 
 # Latent Slice Sampling 
 export LatentSlice

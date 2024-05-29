@@ -26,16 +26,20 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
                            kwargs...)
     logdensitymodel = model.logdensity
     θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
+    d  = length(θ)
+    if sampler.unislice isa AbstractVector
+        @assert length(sampler.unislice) == d "Number of slice samplers does not match the dimensionality of the initial parameter."
+    end
     lp = LogDensityProblems.logdensity(logdensitymodel, θ)
     t  = Transition(θ, lp, NamedTuple())
-    return t, GibbsSliceState(t)
+    return t, GibbsState(t)
 end
 
 function AbstractMCMC.step(
     rng    ::Random.AbstractRNG,
     model  ::AbstractMCMC.LogDensityModel, 
     sampler::RandPermGibbs,
-    state  ::GibbsSliceState;
+    state  ::GibbsState;
     kwargs...,
 )
     logdensitymodel = model.logdensity
@@ -43,22 +47,21 @@ function AbstractMCMC.step(
     θ               = copy(state.transition.params)
     d               = length(θ)
     unislices       = if sampler.unislice isa AbstractVector
-        @assert length(sampler.unislice) == d "Number of slice samplers does not match target posterior dimensionality."
         sampler.unislice
     else
         Fill(sampler.unislice, d)
     end
 
-    n_props = zeros(Int, length(θ))
-    for i in shuffle(rng, 1:length(θ))
+    props = zeros(Int, d)
+    for i in shuffle(rng, 1:d)
         model_gibbs = GibbsTarget(logdensitymodel, i, θ)
         unislice    = unislices[i]
-        θ′idx, ℓp, props = slice_sampling_univariate(
+        θ′_coord, ℓp, props_coord = slice_sampling_univariate(
             rng, unislice, model_gibbs, ℓp, θ[i]
         )
-        n_props[i] = props
-        θ[i]       = θ′idx
+        props[i] = props_coord
+        θ[i]     = θ′_coord
     end
-    t = Transition(θ, ℓp, (num_proposals=n_props,))
-    t, GibbsSliceState(t)
+    t = Transition(θ, ℓp, (num_proposals=props,))
+    t, GibbsState(t)
 end

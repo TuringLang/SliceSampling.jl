@@ -1,5 +1,5 @@
 
-struct GibbsSliceState{T <: Transition}
+struct GibbsState{T <: Transition}
     "Current [`Transition`](@ref)."
     transition::T
 end
