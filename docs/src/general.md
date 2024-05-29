@@ -39,7 +39,7 @@ samples = hcat([transition.params for transition in chain]...)
 plot(samples[1,:], xlabel="Iteration", ylabel="Trace")
 savefig("abstractmcmc_demo.svg")
 ```
-![](logdensityproblems_demo.svg)
+![](abstractmcmc_demo.svg)
 
 ### Drawing Samples From `Turing` Models
 `SliceSampling.jl` can also be used to sample from [Turing](https://github.com/TuringLang/Turing.jl) models through `Turing`'s `externalsampler` interface:
