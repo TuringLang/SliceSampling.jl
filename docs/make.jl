@@ -18,6 +18,7 @@ makedocs(;
         "Home"                          => "index.md",
         "General Usage"                 => "general.md",
         "Univariate Slice Sampling"     => "univariate_slice.md",
+        "Univariate to Multivariate"    => "uni_to_multi.md",
         "Latent Slice Sampling"         => "latent_slice.md",
         "Gibbsian Polar Slice Sampling" => "gibbs_polar.md"
     ],
