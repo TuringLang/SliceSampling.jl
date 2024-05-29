@@ -35,17 +35,12 @@ SliceSteppingOut
 SliceDoublingOut
 ```
 
-<<<<<<< HEAD
 ## Univariate-to-Multivariate Strategies
-=======
-## Combining Univariate Samplers for Multivariate Targets
->>>>>>> 225afc96289de722dc0ba160abb6d33165517781
 To use univariate slice sampling strategies on targets with more than on dimension, one has to embed them into a multivariate sampling scheme that relies on univariate sampling elements.
 The two most popular approaches for this are Gibbs sampling[^GG1984] hit-and-run[^BRS1993].
 
 ### Random Permutation Gibbs Strategy
 Gibbs sampling[^GG1984] is a simple strategy where we sample a coordinate at a time, conditioned on the values of all other coordinates.
-<<<<<<< HEAD
 In practice, one can pick the coordinates in any order they want as long as it does not depend on the state of the chain.
 It is generally hard to know a-prior which ``scan order'' is best, but randomly picking coordinates tend to work well in general:
 
