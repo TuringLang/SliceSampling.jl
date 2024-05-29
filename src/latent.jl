@@ -15,7 +15,10 @@ struct LatentSlice{B <: Real} <: AbstractSliceSampling
     max_proposals::Int
 end
 
-LatentSlice(beta::Real; max_proposals::Int = typemax(Int)) = LatentSlice(beta, max_proposals)
+function LatentSlice(beta::Real; max_proposals::Int = typemax(Int))
+    @assert beta > 0 "Beta must be strictly positive"
+    LatentSlice(beta, max_proposals)
+end
 
 struct LatentSliceState{T <: Transition, S <: AbstractVector}
     "Current [`Transition`](@ref)."
