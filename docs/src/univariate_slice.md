@@ -87,7 +87,7 @@ HitAndRun
 This can be used, for example, as follows:
 
 ```julia
-RandPermGibbs(SliceSteppingOut(2.))
+HitAndRun(SliceSteppingOut(2.))
 ```
 Unlike `RandPermGibbs`, `HitAndRun` does not provide the option of using a unique `unislice` object for each coordinate.
 This is a natural limitation of the hit-and-run sampler: it does not operate on individual coordinates.
