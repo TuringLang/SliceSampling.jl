@@ -10,7 +10,7 @@ Latent slice sampling algorithm by Li and Walker[^LW2023].
 # Keyword Arguments
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
 """
-struct LatentSlice{B <: Real} <: AbstractSliceSampling
+struct LatentSlice{B <: Real} <: AbstractMultivariateSliceSampling
     beta         ::B
     max_proposals::Int
 end
