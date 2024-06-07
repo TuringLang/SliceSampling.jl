@@ -1,6 +1,6 @@
 name = "SliceSampling"
 uuid = "43f4d3e8-9711-4a8c-bd1b-03ac73a255cf"
-version = "0.4.1"
+version = "0.4.2"
 
 [deps]
 AbstractMCMC = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
@@ -29,7 +29,7 @@ LogDensityProblems = "2"
 Random = "1"
 Requires = "1"
 SimpleUnPack = "1"
-Turing = "0.31, 0.32"
+Turing = "0.31, 0.32 0.33"
 julia = "1.7"
 
 [extras]
