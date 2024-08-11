@@ -6,7 +6,7 @@ Hit-and-run sampling strategy[^BRS1993].
 This applies `unislice` along a random direction uniform sampled from the sphere.
 
 # Arguments
-- `unislice`: Univariate slice sampling algorithm.
+- `unislice::AbstractUnivariateSliceSampling`: Univariate slice sampling algorithm.
 
 `unislice` can also be a vector of univeriate slice samplers, where each slice sampler is applied to each corresponding coordinate of the target posterior.
 """

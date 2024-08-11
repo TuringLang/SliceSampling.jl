@@ -39,16 +39,19 @@ The only tunable parameter of the algorithm is the size of the search interval (
 	
 ## Interface
 
-!!! warning
+!!! info
     By the nature of polar coordinates, GPSS only works reliably for targets with dimension at least $$d \geq 2$$.
-
-!!! warning
-    When initializing the chain (*e.g.* the `initial_params` keyword arguments in `AbstractMCMC.sample`), it is necessary to inialize from a point $$x_0$$ that has a sensible norm $$\lVert x_0 \rVert > 0$$, otherwise, the chain will start from a pathologic point in polar coordinates. If it is smaller than `1e-5`, the current implementation automatically sets the initial radius as `1e-5`.
-
 
 ```@docs
 GibbsPolarSlice
 ```
+
+!!! warning
+    When initializing the chain (*e.g.* the `initial_params` keyword arguments in `AbstractMCMC.sample`), it is necessary to inialize from a point $$x_0$$ that has a sensible norm $$\lVert x_0 \rVert > 0$$, otherwise, the chain will start from a pathologic point in polar coordinates. This might even result in the sampler getting stuck in an infinite loop. (This can be prevented by setting `max_proposals`.) If $$\lVert x_0 \rVert \leq 10^{-5}$$, the current implementation will display a warning. 
+	
+!!! info
+	For Turing users: `Turing` might change `initial_params` to match the support of the posterior. This might lead to $$\lVert x_0 \rVert$$ being small, even though the vector you passed to`initial_params` has a sufficiently large norm. If this is suspected, simply try a different initialization value.
+
 
 ## Demonstration
 As illustrated in the original paper, GPSS shows good performance on heavy-tailed targets despite being a multivariate slice sampler.

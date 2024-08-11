@@ -16,7 +16,7 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
   - doubling-out window adaptation
 
 ### Univariate-to-Multivariate Strategies
-- Random Permutation coordinate-wise Gibbs sampling[^GG1984]
+- Random permutation coordinate-wise Gibbs sampling[^GG1984]
 - Hit-and-run sampling[^BRS1993]
 
 ### Multivariate Slice Sampling Algorithms
@@ -39,7 +39,7 @@ end
 sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
-sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
+sample(model, externalsampler(sampler), n_samples; initial_params=[exp(1.0), 0.0])
 ```
 
 [^N2003]: Neal, R. M. (2003). Slice sampling. The annals of statistics, 31(3), 705-767.

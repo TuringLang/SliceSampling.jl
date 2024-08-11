@@ -4,9 +4,45 @@
 This package implements the `AbstractMCMC` [interface](https://github.com/TuringLang/AbstractMCMC.jl).
 `AbstractMCMC` provides a unifying interface for MCMC algorithms applied to [LogDensityProblems](https://github.com/tpapp/LogDensityProblems.jl).
 
-## Drawing Samples From `Turing` Models
-`SliceSampling.jl` can be used to sample from [Turing](https://github.com/TuringLang/Turing.jl) models through `Turing`'s `externalsampler` interface.
-See the following example:
+## Examples
+### Drawing Samples From a `LogDensityProblems` Through `AbstractMCMC`
+`SliceSampling.jl` implements the [`AbstractMCMC`](https://github.com/TuringLang/AbstractMCMC.jl) interface through [`LogDensityProblems`](https://github.com/tpapp/LogDensityProblems.jl).
+That is, one simply needs to define a `LogDensityProblems` and pass it to `AbstractMCMC`:
+
+```@example logdensityproblems
+using AbstractMCMC
+using Distributions
+using LinearAlgebra
+using LogDensityProblems
+using Plots
+
+using SliceSampling
+
+struct Target{D}
+	dist::D
+end
+
+LogDensityProblems.logdensity(target::Target, x) = logpdf(target.dist, x)
+
+LogDensityProblems.dimension(target::Target) = length(target.distx)
+
+LogDensityProblems.capabilities(::Type{<:Target}) = LogDensityProblems.LogDensityOrder{0}()
+
+sampler         = GibbsPolarSlice(2.0)
+n_samples       = 10000
+model           = Target(MvTDist(5, zeros(10), Matrix(I, 10, 10)))
+logdensitymodel = AbstractMCMC.LogDensityModel(model)
+
+chain   = sample(logdensitymodel, sampler, n_samples; initial_params=randn(10))
+samples = hcat([transition.params for transition in chain]...)
+
+plot(samples[1,:], xlabel="Iteration", ylabel="Trace")
+savefig("abstractmcmc_demo.svg")
+```
+![](abstractmcmc_demo.svg)
+
+### Drawing Samples From `Turing` Models
+`SliceSampling.jl` can also be used to sample from [Turing](https://github.com/TuringLang/Turing.jl) models through `Turing`'s `externalsampler` interface:
 
 ```@example turing
 using Distributions
@@ -21,11 +57,10 @@ end
 sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
-sample(model, externalsampler(sampler), n_samples; initial_params=[1.0, 0.0])
+sample(model, externalsampler(sampler), n_samples; initial_params=[exp(1.0), 0.0])
 ```
 
 ## Drawing Samples
-
 For drawing samples using the algorithms provided by `SliceSampling`, the user only needs to call:
 ```julia
 sample([rng,] model, slice, N; initial_params)
@@ -39,7 +74,6 @@ The output is a `SliceSampling.Transition` object, which contains the following:
 SliceSampling.Transition
 ```
 
-
 For the keyword arguments, `SliceSampling` allows:
 - `initial_params`: The intial state of the Markov chain (default: `nothing`).
 
@@ -52,11 +86,10 @@ SliceSampling.initial_sample
 For more fined-grained control, the user can call `AbstractMCMC.step`.
 That is, the chain can be initialized by calling:
 ```julia
-param, state = AbstractMCMC.steps([rng,] model, slice; initial_params)
+transition, state = AbstractMCMC.steps([rng,] model, slice; initial_params)
 ```
 and then each MCMC transition on `state` can be performed by calling:
 ```julia
-param, state = AbstractMCMC.steps([rng,] model, slice, state)
+transition, state = AbstractMCMC.steps([rng,] model, slice, state)
 ```
-
 For more details, refer to the documentation of `AbstractMCMC`.
