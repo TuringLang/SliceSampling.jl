@@ -57,7 +57,7 @@ function LogDensityProblems.dimension(model::MultiModel)
     2
 end
 
-@testset "sampling" begin
+@testset "multivariate sampling" begin
     model   = MultiModel(1., 1., [0.])
     @testset for sampler in [
         # Vector-valued windows

@@ -45,7 +45,7 @@ function LogDensityProblems.dimension(model::UniModel)
     1
 end
 
-@testset "sampling" begin
+@testset "multivariate sampling" begin
     model   = UniModel([0.])
     @testset for sampler in [
         Slice(1),

@@ -95,6 +95,14 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
     return t, UnivariateSliceState(t)
 end
 
+struct UnivariateTarget{Model}
+    model::Model
+end
+
+function LogDensityProblems.logdensity(uni::UnivariateTarget, θi)
+    LogDensityProblems.logdensity(uni.model, [θi])
+end
+
 function AbstractMCMC.step(
     rng    ::Random.AbstractRNG,
     model  ::AbstractMCMC.LogDensityModel, 
