@@ -72,14 +72,16 @@ model = demo()
 n_samples = 1000
 latent_chain = sample(model, externalsampler(LatentSlice(10)), n_samples; initial_params=ones(10))
 polar_chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=ones(10))
-stephist( rand(TDist(1), 10000),  bins=-10:1:10, normed=true, label="true", linewidth=3)
-stephist!(latent_chain[:,1,:], bins=-10:1:10, fill=true, alpha=0.5, normed=true, label="LSS")
-stephist!(polar_chain[:,1,:],  bins=-10:1:10, fill=true, alpha=0.5, normed=true, label="GPSS")
+
+l = @layout [a; b]
+p1 = Plots.plot(1:n_samples, latent_chain[:,1,:], ylims=[-10,10], label="LSS")
+p2 = Plots.plot(1:n_samples, polar_chain[:,1,:],  ylims=[-10,10], label="GPSS")
+plot(p1, p2, layout = l)
 savefig("student_latent_gpss.svg")
 ```
 ![](student_latent_gpss.svg)
 
-Clearly, for 1000 samples, GPSS is mixing much quicker than the [latent slice sampler](@ref latent) (LSS) at a similar per-iteration cost.
+Clearly, GPSS is better at exploring the deep tails compared to the [latent slice sampler](@ref latent) (LSS) despite having a similar per-iteration cost.
 
 
 [^SHR2023]: Schär, P., Habeck, M., & Rudolf, D. (2023, July). Gibbsian polar slice sampling. In International Conference on Machine Learning.
