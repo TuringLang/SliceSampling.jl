@@ -10,6 +10,10 @@ using LogDensityProblems
 using SimpleUnPack
 using Random
 
+# The following is necessary because Turing wraps all models with
+# LogDensityProblemsAD by default. So we need access to these types.
+using LogDensityProblemsAD
+
 # reexports
 using AbstractMCMC: sample, MCMCThreads, MCMCDistributed, MCMCSerial
 export sample, MCMCThreads, MCMCDistributed, MCMCSerial
@@ -48,6 +52,14 @@ Return the initial sample for the `model` using the random number generator `rng
 - `model`: the model of interest.
 """
 function initial_sample end
+
+# If target is from `LogDensityProblemsAD`, unwrap target before calling `initial_sample`.
+# This is necessary since Turing wraps `DynamicPPL.Model`s when passed to an `externalsampler`.
+initial_sample(
+    rng::Random.AbstractRNG,
+    wrap::LogDensityProblemsAD.ADGradientWrapper
+) = initial_sample(rng, parent(wrap))
+
 
 function exceeded_max_prop(max_prop::Int)
     error("Exceeded maximum number of proposal $(max_prop).\n", 

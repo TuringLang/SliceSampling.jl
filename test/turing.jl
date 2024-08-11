@@ -27,5 +27,12 @@
             initial_params=[1.0, 0.1],
             progress=false,
         )
+
+        chain = sample(
+            model,
+            externalsampler(sampler),
+            n_samples;
+            progress=false,
+        )
     end
 end
