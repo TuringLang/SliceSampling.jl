@@ -114,7 +114,7 @@ function AbstractMCMC.step(
     θ, ℓp = only(state.transition.params), state.transition.lp
 
     θ, ℓp, props = slice_sampling_univariate(
-        rng, sampler, logdensitymodel, ℓp, θ
+        rng, sampler, UnivariateTarget(logdensitymodel), ℓp, θ
     )
 
     t = Transition([θ], ℓp, (num_proposals=props,))
