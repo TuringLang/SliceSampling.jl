@@ -2,7 +2,7 @@
 # Univariate Slice Sampling Algorithms
 ## Introduction
 These algorithms are the "single-variable" slice sampling algorithms originally described by Neal[^N2003].
-Since these algorithms are univariate, one has to combine them with univariate-to-multivariate strategies, which are discussed in [this section](@ref unitomulti).
+Since these algorithms are univariate, one has to incorporate them into a "meta" multivariate sampler, which are discussed in [this section](@ref meta).
 
 ## Fixed Initial Interval Slice Sampling 
 This is the most basic form of univariate slice sampling, where the proposals are generated within a fixed interval formed by the `window`.

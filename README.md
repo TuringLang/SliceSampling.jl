@@ -15,7 +15,7 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
   - stepping-out window adaptation
   - doubling-out window adaptation
 
-### Univariate-to-Multivariate Strategies
+### Meta Samplers for Augmenting Univariate Samplers
 - Random permutation coordinate-wise Gibbs sampling[^GG1984]
 - Hit-and-run sampling[^BRS1993]
 

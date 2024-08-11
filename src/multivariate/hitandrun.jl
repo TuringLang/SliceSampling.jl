@@ -39,7 +39,7 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
                            kwargs...)
     logdensitymodel = model.logdensity
     θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
-    d  = length(initial_params)
+    d  = length(θ)
     @assert d ≥ 2 "Hit-and-Run works reliably only in dimension ≥2"
     lp = LogDensityProblems.logdensity(logdensitymodel, θ)
     t  = Transition(θ, lp, NamedTuple())

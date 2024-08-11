@@ -34,7 +34,7 @@ function AbstractMCMC.step(rng    ::Random.AbstractRNG,
                            initial_params = nothing,
                            kwargs...)
     logdensitymodel = model.logdensity
-    y  = initial_params === nothing ? initial_sample(rng, model) : initial_params
+    y  = initial_params === nothing ? initial_sample(rng, logdensitymodel) : initial_params
     β  = sampler.beta
     d  = length(y)
     lp = LogDensityProblems.logdensity(logdensitymodel, y)

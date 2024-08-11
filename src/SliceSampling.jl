@@ -49,9 +49,15 @@ Return the initial sample for the `model` using the random number generator `rng
 
 # Arguments
 - `rng::Random.AbstractRNG`: Random number generator.
-- `model`: the model of interest.
+- `model`: The target `LogDensityProblem`.
 """
-function initial_sample end
+function initial_sample(::Random.AbstractRNG, ::Any)
+    error(
+        "`initial_sample` is not implemented but an initialization wasn't provided. " *
+        "Consider supplying an initialization to `initial_params`."
+    )
+    println("fuck!!!")
+end
 
 # If target is from `LogDensityProblemsAD`, unwrap target before calling `initial_sample`.
 # This is necessary since Turing wraps `DynamicPPL.Model`s when passed to an `externalsampler`.
@@ -59,7 +65,6 @@ initial_sample(
     rng::Random.AbstractRNG,
     wrap::LogDensityProblemsAD.ADGradientWrapper
 ) = initial_sample(rng, parent(wrap))
-
 
 function exceeded_max_prop(max_prop::Int)
     error("Exceeded maximum number of proposal $(max_prop).\n", 
@@ -73,31 +78,40 @@ export Slice, SliceSteppingOut, SliceDoublingOut
 
 abstract type AbstractUnivariateSliceSampling <: AbstractSliceSampling  end
 
-function accept_slice_proposal end
+accept_slice_proposal(
+    ::AbstractSliceSampling,
+    ::Any,
+    ::Real,
+    ::Real,
+    ::Real,
+    ::Real,
+    ::Real,
+    ::Real,
+) = true
 
 function find_interval end
 
-include("univariate.jl")
-include("steppingout.jl")
-include("doublingout.jl")
+include("univariate/univariate.jl")
+include("univariate/fixedinterval.jl")
+include("univariate/steppingout.jl")
+include("univariate/doublingout.jl")
 
 ## Multivariate slice sampling algorithms
 abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling  end
 
-# Univariate-to-Multivariate Strategies 
+# Meta Multivariate Samplers
 export RandPermGibbs, HitAndRun
 
-include("gibbsgeneral.jl")
-include("randpermgibbs.jl")
-include("hitandrun.jl")
+include("multivariate/randpermgibbs.jl")
+include("multivariate/hitandrun.jl")
 
 # Latent Slice Sampling 
 export LatentSlice
-include("latent.jl")
+include("multivariate/latent.jl")
 
 # Gibbsian Polar Slice Sampling 
 export GibbsPolarSlice
-include("gibbspolar.jl")
+include("multivariate/gibbspolar.jl")
 
 # Turing Compatibility
 

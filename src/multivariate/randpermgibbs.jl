@@ -20,13 +20,29 @@ struct RandPermGibbs{
     unislice::S
 end
 
+struct GibbsState{T <: Transition}
+    "Current [`Transition`](@ref)."
+    transition::T
+end
+
+struct GibbsTarget{Model, Idx <: Integer, Vec <: AbstractVector}
+    model::Model
+    idx  ::Idx
+    θ    ::Vec
+end
+
+function LogDensityProblems.logdensity(gibbs::GibbsTarget, θi)
+    @unpack model, idx, θ = gibbs
+    LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
+end
+
 function AbstractMCMC.step(rng    ::Random.AbstractRNG,
                            model  ::AbstractMCMC.LogDensityModel,
                            sampler::RandPermGibbs;
                            initial_params = nothing,
                            kwargs...)
     logdensitymodel = model.logdensity
-    θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
+    θ  = initial_params === nothing ? initial_sample(rng, logdensitymodel) : initial_params
     d  = length(θ)
     if sampler.unislice isa AbstractVector
         @assert length(sampler.unislice) == d "Number of slice samplers does not match the dimensionality of the initial parameter."
