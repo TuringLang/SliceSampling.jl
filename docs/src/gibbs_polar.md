@@ -35,7 +35,8 @@ The Gibbs steps on $$\theta$$ and $$r$$ are implemented through specialized shri
 The only tunable parameter of the algorithm is the size of the search interval (window) of the shrinkage sampler for the radius variable $$r$$.
 
 !!! info
-    Since the direction and radius variables are states of the Markov chain, this sampler is **not reversible** with respect to the samples of the log-target $$x$$.
+    The kernel corresponding to this sampler is defined on an **augmented state space** and cannot directly perform a transition on $$x$$.
+    This also means that the corresponding kernel is not reversible with respect to $$x$$.
 	
 ## Interface
 

@@ -9,18 +9,20 @@ Unlike other slice sampling algorithms, it treats the "search intervals" as auxi
 Specifically, the extended joint density of the latent slice sampler is as follows:
 
 ```math
-    p(y, s, l) = \pi(y) \, p(s) \, \operatorname{Uniform}\left(l; \; y - s/2,\, y + s/2\right),
+    p(x, t, s, l) = \pi(x) \, p(s) \, \operatorname{Uniform}\left(t; 0, \pi\left(x\right)\right) \, \operatorname{Uniform}\left(l; \; x - s/2,\, x + s/2\right),
 ```
 where $$y$$ is the parameters of the log-target $$\pi$$, $$s$$ is the width of the search interval and $$l$$ is the centering of the search interval relative to $$y$$.
 Naturally, the sampler operates as a blocked-Gibbs sampler 
 ```math
 \begin{aligned}
-l_n &\sim \operatorname{Uniform}\left(l; \; y_{n-1} - s_{n-1}/2,\, y_{n-1} + s_{n-1}/2\right) \\
-s_n &\sim p(s \mid y_{n-1}, l_{n}) \\
-y_n &\sim \operatorname{shrinkage}\left(y \mid s_n, l_n\right),
+l_n &\sim \operatorname{Uniform}\left(l; \; x_{n-1} - s_{n-1}/2,\, x_{n-1} + s_{n-1}/2\right) \\
+s_n &\sim p(s \mid x_{n-1}, l_{n}) \\
+t_n &\sim \operatorname{Uniform}\left(0, \pi\left(x_n\right)\right) \\
+x_n &\sim \operatorname{Uniform}\left\{x \mid \pi\left(x_n\right) > t_n\right\},
 \end{aligned}
 ```
-where $$y$$ is updated using the shrinkage procedure by Neal[^N2003] using the initial interval formed by $$(s, l)$$.
+When $$x_n$$ is updated using the usual shrinkage procedure of Neal[^N2003], $$s_n$$ and $$l_n$$ are used to form the initial search window.
+($$s_n$$ is the width of the window and $$l_n$$ is its center point.)
 Therefore, the latent slice sampler can be regarded as an automatic tuning mechanism of the "initial interval" of slice samplers.
 
 The only tunable parameter of the algorithm is then the distribution of the width $$p(s)$$.
@@ -34,7 +36,8 @@ The use of the gamma distribution is somewhat important since the complete condi
 Therefore, we only provide control over $$\beta$$.
 
 !!! info
-    Since the search interval variables are states of the Markov chain, this sampler is **not reversible** with respect to the samples of the log-target $$y$$.
+    The kernel corresponding to this sampler is defined on an **augmented state space** and cannot directly perform a transition on $$x$$.
+    This also means that the corresponding kernel is not reversible with respect to $$x$$.
 	
 ## Interface
 
