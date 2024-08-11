@@ -66,7 +66,6 @@ function accept_slice_proposal end
 function find_interval end
 
 include("univariate.jl")
-include("slice.jl")
 include("steppingout.jl")
 include("doublingout.jl")
 
