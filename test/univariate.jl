@@ -52,6 +52,32 @@ end
         SliceSteppingOut(1),
         SliceDoublingOut(1),
     ]
+        @testset "initialization" begin
+            model  = UniModel([0.0])
+            θ, y  = MCMCTesting.sample_joint(Random.default_rng(), model)
+            model′ = AbstractMCMC.LogDensityModel(@set model.y = y)
+
+            θ0    = [1.0]
+            chain = sample(
+                model,
+                sampler,
+                10;
+                initial_params=θ0,
+                progress=false,
+            )
+            @test first(chain).params == θ0
+        end
+
+        @testset "initial_sample" begin
+            rng = StableRNG(1)
+            model = UniModel([0.0])
+            θ0 = SliceSampling.initial_sample(rng, model)
+
+            rng = StableRNG(1)
+            chain = sample(rng, model, sampler, 10; progress=false)
+            @test first(chain).params == θ0
+        end
+
         @testset "determinism" begin
             model  = UniModel([0.0])
             θ, y  = MCMCTesting.sample_joint(Random.default_rng(), model)

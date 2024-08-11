@@ -80,6 +80,32 @@ end
         # Gibbsian polar slice sampling
         GibbsPolarSlice(10),
     ]
+        @testset "initial_params" begin
+            model  = MultiModel(1.0, 1.0, [0.0])
+            θ, y  = MCMCTesting.sample_joint(Random.default_rng(), model)
+            model′ = AbstractMCMC.LogDensityModel(@set model.y = y)
+
+            θ0    = [1.0, 0.1]
+            chain = sample(
+                model,
+                sampler,
+                10;
+                initial_params=θ0,
+                progress=false,
+            )
+            @test first(chain).params == θ0
+        end
+
+        @testset "initial_sample" begin
+            rng = StableRNG(1)
+            model = MultiModel(1.0, 1.0, [0.0])
+            θ0 = SliceSampling.initial_sample(rng, model)
+
+            rng = StableRNG(1)
+            chain = sample(rng, model, sampler, 10; progress=false)
+            @test first(chain).params == θ0
+        end
+
         @testset "determinism" begin
             model  = MultiModel(1.0, 1.0, [0.0])
             θ, y  = MCMCTesting.sample_joint(Random.default_rng(), model)
