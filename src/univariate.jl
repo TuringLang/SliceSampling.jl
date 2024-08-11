@@ -77,3 +77,38 @@ function slice_sampling_univariate(
     exceeded_max_prop(max_prop)
 end
 
+struct UnivariateSliceState{T <: Transition}
+    "Current [`Transition`](@ref)."
+    transition::T
+end
+
+function AbstractMCMC.step(rng    ::Random.AbstractRNG,
+                           model  ::AbstractMCMC.LogDensityModel,
+                           sampler::AbstractUnivariateSliceSampling;
+                           initial_params = nothing,
+                           kwargs...)
+    logdensitymodel = model.logdensity
+    θ  = isnothing(initial_params) ? initial_sample(rng, logdensitymodel) : initial_params
+    @assert length(θ) == 1 "The dimensionality of the parameter should be 1."
+    lp = LogDensityProblems.logdensity(logdensitymodel, θ)
+    t  = Transition(θ, lp, NamedTuple())
+    return t, UnivariateSliceState(t)
+end
+
+function AbstractMCMC.step(
+    rng    ::Random.AbstractRNG,
+    model  ::AbstractMCMC.LogDensityModel, 
+    sampler::AbstractUnivariateSliceSampling,
+    state  ::UnivariateSliceState;
+    kwargs...,
+)
+    logdensitymodel = model.logdensity
+    θ, ℓp = only(state.transition.params), state.transition.lp
+
+    θ, ℓp, props = slice_sampling_univariate(
+        rng, sampler, logdensitymodel, ℓp, θ
+    )
+
+    t = Transition([θ], ℓp, (num_proposals=props,))
+    t, UnivariateSliceState(t)
+end

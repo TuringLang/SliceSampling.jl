@@ -3,7 +3,8 @@
 
 ## Introduction
 These algorithms are the "single-variable" slice sampling algorithms originally described by Neal[^N2003].
-Since these algorithms are univariate, they are applied to each coordinate of the target distribution in a random-scan Gibbs sampling fashion.
+Since these algorithms are univariate, they can only be applied to 1-dimensional targets.
+For multidimensional targets, one can augment these univariate samplers through [univariate-to-multivariate strategies](@ref unitomulti).
 
 !!! info
     By the nature of Gibbs sampling, univariate methods mix slowly when the posterior is highly correlated.
@@ -12,7 +13,6 @@ Since these algorithms are univariate, they are applied to each coordinate of th
 
 ## Fixed Initial Interval Slice Sampling 
 This is the most basic form of univariate slice sampling, where the proposals are generated within a fixed interval formed by the `window`.
-
 
 ```@docs
 Slice
@@ -35,7 +35,7 @@ SliceSteppingOut
 SliceDoublingOut
 ```
 
-## Univariate-to-Multivariate Strategies
+## [Univariate-to-Multivariate Strategies](@id unitomulti)
 To use univariate slice sampling strategies on targets with more than on dimension, one has to embed them into a multivariate sampling scheme that relies on univariate sampling elements.
 The two most popular approaches for this are Gibbs sampling[^GG1984] hit-and-run[^BRS1993].
 
