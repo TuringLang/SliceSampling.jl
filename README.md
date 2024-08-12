@@ -11,17 +11,17 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
 ## Implemented Algorithms
 ### Univariate Slice Sampling Algorithms
 - Univariate slice sampling ([Slice](https://turinglang.org/SliceSampling.jl/dev/univariate_slice/)) algorithms by R. Neal [^N2003]:
-  - Fixed window
-  - stepping-out window adaptation
-  - doubling-out window adaptation
+  - Fixed window (`Slice`)
+  - stepping-out window adaptation (`SliceSteppingOut`)
+  - doubling-out window adaptation (`SliceDoublingOut`)
 
 ### Meta Multivariate Samplers for Augmenting Univariate Samplers
-- Random permutation coordinate-wise Gibbs sampling[^GG1984]
-- Hit-and-run sampling[^BRS1993]
+- Random permutation coordinate-wise Gibbs sampling[^GG1984] (`RandPermGibbs`)
+- Hit-and-run sampling[^BRS1993] (`HitAndRun`)
 
 ### Multivariate Slice Sampling Algorithms
-- Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023]
-- Gibbsian polar slice sampling ([GPSS](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/)) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
+- Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023] (`LatentSlice`)
+- Gibbsian polar slice sampling ([GPSS](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/)) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023] (`GibbsPolarSlice`)
 
 ## Example with Turing Models
 This package supports the [Turing](https://github.com/TuringLang/Turing.jl) probabilistic programming framework:
@@ -40,6 +40,45 @@ sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
 sample(model, externalsampler(sampler), n_samples)
+```
+
+The following slice samplers can also be used as a conditional sampler in `Turing.Experimental.Gibbs` sampler:
+* For multidimensional variables: 
+  * `RandPermGibbs`
+  * `HitAndRun`
+* For unidimensional variables: 
+  * `Slice`
+  * `SliceSteppingOut`
+  * `SliceDoublingOut`
+
+See the following example:
+```julia
+using Distributions
+using Turing
+using SliceSampling
+
+@model function simple_choice(xs)
+    p ~ Beta(2, 2)
+    z ~ Bernoulli(p)
+    for i in 1:length(xs)
+        if z == 1
+            xs[i] ~ Normal(0, 1)
+        else
+            xs[i] ~ Normal(2, 1)
+        end
+    end
+end
+
+sampler = Turing.Experimental.Gibbs(
+    (
+        p = externalsampler(SliceSteppingOut(2.0)),
+        z = PG(20, :z)
+    )
+)
+
+n_samples = 1000
+model     = simple_choice([1.5, 2.0, 0.3])
+sample(model, sampler, n_samples)
 ```
 
 [^N2003]: Neal, R. M. (2003). Slice sampling. The annals of statistics, 31(3), 705-767.

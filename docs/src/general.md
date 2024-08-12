@@ -65,7 +65,6 @@ sample(model, externalsampler(sampler), n_samples)
 
 ```@example turinggibbs
 using Distributions
-using FillArrays
 using Turing
 using SliceSampling
 
