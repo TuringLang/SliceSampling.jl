@@ -5,18 +5,53 @@ if isdefined(Base, :get_extension)
     using LogDensityProblemsAD
     using Random
     using SliceSampling
-    using Turing: Turing
+    using Turing
+   # using Turing: Turing, Experimental
 else
     using ..LogDensityProblemsAD
     using ..Random
     using ..SliceSampling
-    using ..Turing: Turing
+    using ..Turing
+    #using ..Turing: Turing, Experimental
 end
 
+# Required for using the slice samplers as `externalsampler`s in Turing
+# begin
 Turing.Inference.getparams(
           ::Turing.DynamicPPL.Model,
     sample::SliceSampling.Transition
 ) = sample.params
+# end
+
+# Required for using the slice samplers as `Experimental.Gibbs` samplers in Turing
+# begin
+Turing.Inference.getparams(
+         ::Turing.DynamicPPL.Model,
+    state::SliceSampling.UnivariateSliceState
+) = state.transition.params
+
+Turing.Inference.getparams(
+         ::Turing.DynamicPPL.Model,
+    state::SliceSampling.GibbsState
+) = state.transition.params
+
+Turing.Inference.getparams(
+         ::Turing.DynamicPPL.Model,
+    state::SliceSampling.HitAndRunState
+) = state.transition.params
+
+Turing.Experimental.gibbs_requires_recompute_logprob(
+    model_dst,
+    ::Turing.DynamicPPL.Sampler{
+        <: Turing.Inference.ExternalSampler{
+            <: SliceSampling.AbstractSliceSampling, A, U
+        }
+    },
+    sampler_src,
+    state_dst,
+    state_src
+) where {A,U} = false
+# end
 
 function SliceSampling.initial_sample(
     rng::Random.AbstractRNG,

@@ -35,4 +35,25 @@
             progress=false,
         )
     end
+
+    @testset "gibbs($sampler)" for sampler in [
+        RandPermGibbs(Slice(1)),
+        RandPermGibbs(SliceSteppingOut(1)),
+        RandPermGibbs(SliceDoublingOut(1)),
+        Slice(1),
+        SliceSteppingOut(1),
+        SliceDoublingOut(1),
+    ]
+        sample(
+            model,
+            Turing.Experimental.Gibbs(
+                (
+                    s = externalsampler(sampler),
+                    m = externalsampler(sampler),
+                ),
+            ),
+            n_samples,
+            progress=false,
+        )
+    end
 end

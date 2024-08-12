@@ -60,6 +60,39 @@ model     = demo()
 sample(model, externalsampler(sampler), n_samples)
 ```
 
+### Conditional sampling in a `Turing.Experimental.Gibbs` sampler
+`SliceSampling.jl` be used as a conditional sampler in `Turing.Experimental.Gibbs`.
+
+```@example turinggibbs
+using Distributions
+using FillArrays
+using Turing
+using SliceSampling
+
+@model function simple_choice(xs)
+    p ~ Beta(2, 2)
+    z ~ Bernoulli(p)
+    for i in 1:length(xs)
+        if z == 1
+            xs[i] ~ Normal(0, 1)
+        else
+            xs[i] ~ Normal(2, 1)
+        end
+    end
+end
+
+sampler = Turing.Experimental.Gibbs(
+    (
+        p = externalsampler(SliceSteppingOut(2.0)),
+        z = PG(20, :z)
+    )
+)
+
+n_samples = 1000
+model     = simple_choice([1.5, 2.0, 0.3])
+sample(model, sampler, n_samples)
+```
+
 ## Drawing Samples
 For drawing samples using the algorithms provided by `SliceSampling`, the user only needs to call:
 ```julia
