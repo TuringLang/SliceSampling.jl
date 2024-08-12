@@ -17,7 +17,7 @@ Naturally, the sampler operates as a blocked-Gibbs sampler
 \begin{aligned}
 l_n &\sim \operatorname{Uniform}\left(l; \; x_{n-1} - s_{n-1}/2,\, x_{n-1} + s_{n-1}/2\right) \\
 s_n &\sim p(s \mid x_{n-1}, l_{n}) \\
-t_n &\sim \operatorname{Uniform}\left(0, \pi\left(x_n\right)\right) \\
+t_n &\sim \operatorname{Uniform}\left(0, \pi\left(x_{n-1}\right)\right) \\
 x_n &\sim \operatorname{Uniform}\left\{x \mid \pi\left(x_n\right) > t_n\right\},
 \end{aligned}
 ```
