@@ -18,7 +18,7 @@ Naturally, the sampler operates as a blocked-Gibbs sampler
 l_n &\sim \operatorname{Uniform}\left(l; \; x_{n-1} - s_{n-1}/2,\, x_{n-1} + s_{n-1}/2\right) \\
 s_n &\sim p(s \mid x_{n-1}, l_{n}) \\
 t_n &\sim \operatorname{Uniform}\left(0, \pi\left(x_{n-1}\right)\right) \\
-x_n &\sim \operatorname{Uniform}\left\{x \mid \pi\left(x_n\right) > t_n\right\},
+x_n &\sim \operatorname{Uniform}\left\{x \mid \pi\left(x\right) > t_n\right\},
 \end{aligned}
 ```
 When $$x_n$$ is updated using the usual shrinkage procedure of Neal[^N2003], $$s_n$$ and $$l_n$$ are used to form the initial search window.
