@@ -7,8 +7,6 @@ This applies `unislice` along a random direction uniform sampled from the sphere
 
 # Arguments
 - `unislice::AbstractUnivariateSliceSampling`: Univariate slice sampling algorithm.
-
-`unislice` can also be a vector of univeriate slice samplers, where each slice sampler is applied to each corresponding coordinate of the target posterior.
 """
 struct HitAndRun{
     S <: AbstractUnivariateSliceSampling
