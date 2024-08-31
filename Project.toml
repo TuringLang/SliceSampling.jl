@@ -1,6 +1,6 @@
 name = "SliceSampling"
 uuid = "43f4d3e8-9711-4a8c-bd1b-03ac73a255cf"
-version = "0.6.0"
+version = "0.6.1"
 
 [deps]
 AbstractMCMC = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
