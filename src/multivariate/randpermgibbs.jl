@@ -32,7 +32,7 @@ struct GibbsTarget{Model, Idx <: Integer, Vec <: AbstractVector}
 end
 
 function LogDensityProblems.logdensity(gibbs::GibbsTarget, θi)
-    @unpack model, idx, θ = gibbs
+    (; model, idx, θ) = gibbs
     LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
 end
 

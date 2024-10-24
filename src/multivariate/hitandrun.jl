@@ -26,7 +26,7 @@ struct HitAndRunTarget{Model, Vec <: AbstractVector}
 end
 
 function LogDensityProblems.logdensity(target::HitAndRunTarget, λ)
-    @unpack model, reference, direction = target
+    (; model, reference, direction) = target
     LogDensityProblems.logdensity(model, reference + λ*direction)
 end
 
