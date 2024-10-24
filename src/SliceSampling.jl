@@ -7,7 +7,6 @@ using Distributions
 using FillArrays
 using LinearAlgebra
 using LogDensityProblems
-using SimpleUnPack
 using Random
 
 # The following is necessary because Turing wraps all models with
