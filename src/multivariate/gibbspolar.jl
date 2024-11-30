@@ -194,6 +194,6 @@ function AbstractMCMC.step(
     x            = θ * r
 
     ℓp = LogDensityProblems.logdensity(logdensitymodel, x)
-    t  = Transition(x, ℓp, (num_radius_proposals    = n_props_r, num_direction_proposals = n_props_θ))
+    t  = Transition(x, ℓp, (num_radius_proposals=n_props_r, num_direction_proposals=n_props_θ))
     return t, GibbsPolarSliceState(t, θ, r)
 end
