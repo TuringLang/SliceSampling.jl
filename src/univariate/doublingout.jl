@@ -11,40 +11,33 @@ Univariate slice sampling by automatically adapting the initial interval through
 - `max_doubling_out`: Maximum number of "doubling outs" (default: 8).
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
-struct SliceDoublingOut{W <: Real} <: AbstractUnivariateSliceSampling
-    window          ::W
-    max_doubling_out::Int
-    max_proposals   ::Int
+struct SliceDoublingOut{W<:Real} <: AbstractUnivariateSliceSampling
+    window           :: W
+    max_doubling_out :: Int
+    max_proposals    :: Int
 end
 
 function SliceDoublingOut(
-    window          ::Real;
-    max_doubling_out::Int = 8,
-    max_proposals   ::Int = DEFAULT_MAX_PROPOSALS,
+    window::Real; max_doubling_out::Int = 8, max_proposals::Int    = DEFAULT_MAX_PROPOSALS
 )
     @assert window > 0
-    SliceDoublingOut(window, max_doubling_out, max_proposals)
+    return SliceDoublingOut(window, max_doubling_out, max_proposals)
 end
 
 function find_interval(
-    rng  ::Random.AbstractRNG,
-    alg  ::SliceDoublingOut,
-    model,
-    w    ::Real,
-    ℓy   ::Real,
-    θ₀   ::F,
-) where {F <: Real}
+    rng::Random.AbstractRNG, alg::SliceDoublingOut, model, w::Real, ℓy::Real, θ₀::F
+) where {F<:Real}
     p = alg.max_doubling_out
 
     u = rand(rng, F)
-    L = θ₀ - w*u
+    L = θ₀ - w * u
     R = L + w
 
     ℓπ_L = LogDensityProblems.logdensity(model, L)
     ℓπ_R = LogDensityProblems.logdensity(model, R)
     K    = 2
 
-    for _ = 1:p
+    for _ in 1:p
         if ((ℓy ≥ ℓπ_L) && (ℓy ≥ ℓπ_R))
             break
         end
@@ -58,25 +51,18 @@ function find_interval(
         end
         K += 1
     end
-    L, R, K
+    return L, R, K
 end
 
 function accept_slice_proposal(
-         ::SliceDoublingOut,
-    model,
-    w    ::Real,
-    ℓy   ::Real,
-    θ₀   ::Real,
-    θ₁   ::Real,
-    L    ::Real,
-    R    ::Real,
-) 
+    ::SliceDoublingOut, model, w::Real, ℓy::Real, θ₀::Real, θ₁::Real, L::Real, R::Real
+)
     D    = false
     ℓπ_L = LogDensityProblems.logdensity(model, L)
     ℓπ_R = LogDensityProblems.logdensity(model, R)
 
-    while R - L > 1.1*w
-        M = (L + R)/2
+    while R - L > 1.1 * w
+        M = (L + R) / 2
         if (θ₀ < M && θ₁ ≥ M) || (θ₀ ≥ M && θ₁ < M)
             D = true
         end
@@ -93,5 +79,5 @@ function accept_slice_proposal(
             return false
         end
     end
-    true
+    return true
 end
