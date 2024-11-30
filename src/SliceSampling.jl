@@ -72,8 +72,9 @@ function exceeded_max_prop(max_prop::Int)
           "A quick fix is to increase `max_prop`, ",
           "but an acceptance rate that is too low often indicates that there is a problem. ",
           "Here are some possible causes:\n",
-          "- The model might be broken or degenerate. (most likely cause)\n",
-          "- The initialization is pathologic. (try supplying a different `initial_params`)\n",
+          "- The model might be broken or degenerate (most likely cause).\n",
+          "- The tunable parameters of the sampler are suboptimal.\n",
+          "- The initialization is pathologic. (try supplying a (different) `initial_params`)\n",
           "- There might be a bug in the sampler. (if this is suspected, file an issue to `SliceSampling`)\n"
           )
 end

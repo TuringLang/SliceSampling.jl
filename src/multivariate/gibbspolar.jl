@@ -9,10 +9,13 @@ Gibbsian polar slice sampling algorithm by P. Schär, M. Habeck, and D. Rudolf [
 
 # Keyword Arguments
 - `w::Real`: Initial window size for the radius shrinkage procedure
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `10^6`).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 
 !!! info
     By the nature of polar coordinates, GPSS only works reliably for targets with dimension at least \$\$d \\geq 2\$\$.
+
+!!! info
+    The initial window size `w` must be set at least an order of magnitude larger than what is sensible for other slice samplers. Otherwise, a large number of rejections might be experienced.
 
 !!! warning
     When initializing the chain (*e.g.* the `initial_params` keyword arguments in `AbstractMCMC.sample`), it is necessary to inialize from a point \$\$x_0\$\$ that has a sensible norm \$\$\\lVert x_0 \\rVert > 0\$\$, otherwise, the chain will start from a pathologic point in polar coordinates. This might even result in the sampler getting stuck in an infinite loop. (This can be prevented by setting `max_proposals`.) If \$\$\\lVert x_0 \\rVert \\leq 10^{-5}\$\$, the current implementation will display a warning. 
@@ -25,7 +28,7 @@ struct GibbsPolarSlice{W <: Real} <: AbstractMultivariateSliceSampling
     max_proposals::Int
 end
 
-GibbsPolarSlice(w::Real; max_proposals::Int = 10^6) = GibbsPolarSlice(w, max_proposals)
+GibbsPolarSlice(w::Real; max_proposals::Int = DEFAULT_MAX_PROPOSALS) = GibbsPolarSlice(w, max_proposals)
 
 struct GibbsPolarSliceState{T <: Transition, R <: Real, D <: AbstractVector} 
     "Current [`Transition`](@ref)."
