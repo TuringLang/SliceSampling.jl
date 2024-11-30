@@ -32,7 +32,7 @@ Struct containing the results of the transition.
 - `lp::Real`: Log-target density of the samples.
 - `info::NamedTuple`: Named tuple containing information about the transition. 
 """
-struct Transition{P, L <: Real, I <: NamedTuple}
+struct Transition{P,L<:Real,I<:NamedTuple}
     "current state of the slice sampling chain"
     params::P
 
@@ -53,47 +53,44 @@ Return the initial sample for the `model` using the random number generator `rng
 - `model`: The target `LogDensityProblem`.
 """
 function initial_sample(::Random.AbstractRNG, ::Any)
-    error(
+    return error(
         "`initial_sample` is not implemented but an initialization wasn't provided. ",
-        "Consider supplying an initialization to `initial_params`."
+        "Consider supplying an initialization to `initial_params`.",
     )
 end
 
 # If target is from `LogDensityProblemsAD`, unwrap target before calling `initial_sample`.
 # This is necessary since Turing wraps `DynamicPPL.Model`s when passed to an `externalsampler`.
-initial_sample(
-    rng::Random.AbstractRNG,
-    wrap::LogDensityProblemsAD.ADGradientWrapper
-) = initial_sample(rng, parent(wrap))
+function initial_sample(
+    rng::Random.AbstractRNG, wrap::LogDensityProblemsAD.ADGradientWrapper
+)
+    return initial_sample(rng, parent(wrap))
+end
 
 function exceeded_max_prop(max_prop::Int)
-    error("Exceeded maximum number of proposal $(max_prop), ",
-          "which indicates an acceptance rate less than $(1/max_prop*100)%. ", 
-          "A quick fix is to increase `max_prop`, ",
-          "but an acceptance rate that is too low often indicates that there is a problem. ",
-          "Here are some possible causes:\n",
-          "- The model might be broken or degenerate (most likely cause).\n",
-          "- The tunable parameters of the sampler are suboptimal.\n",
-          "- The initialization is pathologic. (try supplying a (different) `initial_params`)\n",
-          "- There might be a bug in the sampler. (if this is suspected, file an issue to `SliceSampling`)\n"
-          )
+    return error(
+        "Exceeded maximum number of proposal $(max_prop), ",
+        "which indicates an acceptance rate less than $(1/max_prop*100)%. ",
+        "A quick fix is to increase `max_prop`, ",
+        "but an acceptance rate that is too low often indicates that there is a problem. ",
+        "Here are some possible causes:\n",
+        "- The model might be broken or degenerate (most likely cause).\n",
+        "- The tunable parameters of the sampler are suboptimal.\n",
+        "- The initialization is pathologic. (try supplying a (different) `initial_params`)\n",
+        "- There might be a bug in the sampler. (if this is suspected, file an issue to `SliceSampling`)\n",
+    )
 end
 
 ## Univariate Slice Sampling Algorithms
 export Slice, SliceSteppingOut, SliceDoublingOut
 
-abstract type AbstractUnivariateSliceSampling <: AbstractSliceSampling  end
+abstract type AbstractUnivariateSliceSampling <: AbstractSliceSampling end
 
-accept_slice_proposal(
-    ::AbstractSliceSampling,
-    ::Any,
-    ::Real,
-    ::Real,
-    ::Real,
-    ::Real,
-    ::Real,
-    ::Real,
-) = true
+function accept_slice_proposal(
+    ::AbstractSliceSampling, ::Any, ::Real, ::Real, ::Real, ::Real, ::Real, ::Real
+)
+    return true
+end
 
 function find_interval end
 
@@ -103,7 +100,7 @@ include("univariate/steppingout.jl")
 include("univariate/doublingout.jl")
 
 ## Multivariate slice sampling algorithms
-abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling  end
+abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling end
 
 # Meta Multivariate Samplers
 export RandPermGibbs, HitAndRun

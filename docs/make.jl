@@ -20,11 +20,8 @@ makedocs(;
         "Univariate Slice Sampling"     => "univariate_slice.md",
         "Meta Multivariate Samplers"    => "meta_multivariate.md",
         "Latent Slice Sampling"         => "latent_slice.md",
-        "Gibbsian Polar Slice Sampling" => "gibbs_polar.md"
+        "Gibbsian Polar Slice Sampling" => "gibbs_polar.md",
     ],
 )
 
-deploydocs(;
-    repo="github.com/TuringLang/SliceSampling.jl",
-    push_preview=true
-)
+deploydocs(; repo="github.com/TuringLang/SliceSampling.jl", push_preview=true)

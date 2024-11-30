@@ -4,7 +4,7 @@ using Accessors
 using Distributions
 using LogDensityProblems
 using MCMCTesting
-using Random 
+using Random
 using Test
 using Turing
 using StableRNGs

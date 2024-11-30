@@ -4,7 +4,7 @@
         s ~ InverseGamma(2, 3)
         m ~ Normal(0, sqrt(s))
         1.5 ~ Normal(m, sqrt(s))
-        2.0 ~ Normal(m, sqrt(s))
+        return 2.0 ~ Normal(m, sqrt(s))
     end
 
     n_samples = 1000
@@ -28,12 +28,7 @@
             progress=false,
         )
 
-        chain = sample(
-            model,
-            externalsampler(sampler),
-            n_samples;
-            progress=false,
-        )
+        chain = sample(model, externalsampler(sampler), n_samples; progress=false)
     end
 
     @testset "gibbs($sampler)" for sampler in [
@@ -46,13 +41,10 @@
     ]
         sample(
             model,
-            Turing.Experimental.Gibbs(
-                (
-                    s = externalsampler(sampler),
-                    m = externalsampler(sampler),
-                ),
-            ),
-            n_samples,
+            Turing.Experimental.Gibbs((
+                s=externalsampler(sampler), m=externalsampler(sampler)
+            ),),
+            n_samples;
             progress=false,
         )
     end
