@@ -78,7 +78,7 @@ end
         LatentSlice(5),
 
         # Gibbsian polar slice sampling
-        GibbsPolarSlice(10),
+        GibbsPolarSlice(100),
     ]
         @testset "initial_params" begin
             model  = MultiModel(1.0, 1.0, [0.0])
@@ -87,7 +87,7 @@ end
 
             θ0    = [1.0, 0.1]
             chain = sample(
-                model,
+                model′,
                 sampler,
                 10;
                 initial_params=θ0,
