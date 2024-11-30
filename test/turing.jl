@@ -42,7 +42,7 @@
         sample(
             model,
             Turing.Experimental.Gibbs((
-                s = externalsampler(sampler), m = externalsampler(sampler)
+                s=externalsampler(sampler), m=externalsampler(sampler)
             ),),
             n_samples;
             progress=false,
