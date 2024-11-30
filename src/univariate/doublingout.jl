@@ -18,7 +18,7 @@ struct SliceDoublingOut{W<:Real} <: AbstractUnivariateSliceSampling
 end
 
 function SliceDoublingOut(
-    window::Real; max_doubling_out::Int = 8, max_proposals::Int    = DEFAULT_MAX_PROPOSALS
+    window::Real; max_doubling_out::Int=8, max_proposals::Int=DEFAULT_MAX_PROPOSALS
 )
     @assert window > 0
     return SliceDoublingOut(window, max_doubling_out, max_proposals)
