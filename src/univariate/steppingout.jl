@@ -18,7 +18,7 @@ struct SliceSteppingOut{W<:Real} <: AbstractUnivariateSliceSampling
 end
 
 function SliceSteppingOut(
-    window::Real; max_stepping_out::Int = 32, max_proposals::Int    = DEFAULT_MAX_PROPOSALS
+    window::Real; max_stepping_out::Int=32, max_proposals::Int=DEFAULT_MAX_PROPOSALS
 )
     @assert window > 0
     return SliceSteppingOut(window, max_stepping_out, max_proposals)
