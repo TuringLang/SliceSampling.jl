@@ -9,7 +9,7 @@ Univariate slice sampling by automatically adapting the initial interval through
 
 # Keyword Arguments
 - `max_doubling_out`: Maximum number of "doubling outs" (default: 8).
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
 struct SliceDoublingOut{W <: Real} <: AbstractUnivariateSliceSampling
     window          ::W
@@ -20,7 +20,7 @@ end
 function SliceDoublingOut(
     window          ::Real;
     max_doubling_out::Int = 8,
-    max_proposals   ::Int = typemax(Int),
+    max_proposals   ::Int = DEFAULT_MAX_PROPOSALS,
 )
     @assert window > 0
     SliceDoublingOut(window, max_doubling_out, max_proposals)

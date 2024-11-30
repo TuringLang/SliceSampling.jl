@@ -9,14 +9,14 @@ Gibbsian polar slice sampling algorithm by P. Schär, M. Habeck, and D. Rudolf [
 
 # Keyword Arguments
 - `w::Real`: Initial window size for the radius shrinkage procedure
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `10^6`).
 """
 struct GibbsPolarSlice{W <: Real} <: AbstractMultivariateSliceSampling
     w::W
     max_proposals::Int
 end
 
-GibbsPolarSlice(w::Real; max_proposals::Int = typemax(Int)) = GibbsPolarSlice(w, max_proposals)
+GibbsPolarSlice(w::Real; max_proposals::Int = 10^6) = GibbsPolarSlice(w, max_proposals)
 
 struct GibbsPolarSliceState{T <: Transition, R <: Real, D <: AbstractVector} 
     "Current [`Transition`](@ref)."

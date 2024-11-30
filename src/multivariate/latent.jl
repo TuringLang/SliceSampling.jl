@@ -8,14 +8,14 @@ Latent slice sampling algorithm by Li and Walker[^LW2023].
 - `beta::Real`: Beta parameter of the Gamma distribution of the auxiliary variables.
 
 # Keyword Arguments
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
 struct LatentSlice{B <: Real} <: AbstractMultivariateSliceSampling
     beta         ::B
     max_proposals::Int
 end
 
-function LatentSlice(beta::Real; max_proposals::Int = typemax(Int))
+function LatentSlice(beta::Real; max_proposals::Int = DEFAULT_MAX_PROPOSALS)
     @assert beta > 0 "Beta must be strictly positive"
     LatentSlice(beta, max_proposals)
 end

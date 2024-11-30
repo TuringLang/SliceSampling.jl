@@ -20,6 +20,8 @@ export sample, MCMCThreads, MCMCDistributed, MCMCSerial
 # Interfaces
 abstract type AbstractSliceSampling <: AbstractMCMC.AbstractSampler end
 
+const DEFAULT_MAX_PROPOSALS = 10_000
+
 """
     struct Transition
 
@@ -52,10 +54,9 @@ Return the initial sample for the `model` using the random number generator `rng
 """
 function initial_sample(::Random.AbstractRNG, ::Any)
     error(
-        "`initial_sample` is not implemented but an initialization wasn't provided. " *
+        "`initial_sample` is not implemented but an initialization wasn't provided. ",
         "Consider supplying an initialization to `initial_params`."
     )
-    println("fuck!!!")
 end
 
 # If target is from `LogDensityProblemsAD`, unwrap target before calling `initial_sample`.
@@ -66,10 +67,15 @@ initial_sample(
 ) = initial_sample(rng, parent(wrap))
 
 function exceeded_max_prop(max_prop::Int)
-    error("Exceeded maximum number of proposal $(max_prop).\n", 
-          "Here are possible causes:\n",
-          "- The model might be broken or pathologic.\n",
-          "- There might be a bug in the sampler.")
+    error("Exceeded maximum number of proposal $(max_prop), ",
+          "which indicates an acceptance rate less than $(1/max_prop*100)%. ", 
+          "A quick fix is to increase `max_prop`, ",
+          "but an acceptance rate that is too low often indicates that there is a problem. ",
+          "Here are some possible causes:\n",
+          "- The model might be broken or degenerate. (most likely cause)\n",
+          "- The initialization is pathologic. (try supplying a different `initial_params`)\n",
+          "- There might be a bug in the sampler. (if this is suspected, file an issue to `SliceSampling`)\n"
+          )
 end
 
 ## Univariate Slice Sampling Algorithms

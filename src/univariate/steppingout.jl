@@ -9,7 +9,7 @@ Univariate slice sampling by automatically adapting the initial interval through
 
 # Keyword Arguments
 - `max_stepping_out::Int`: Maximum number of "stepping outs" (default: 32).
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `typemax(Int)`).
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
 struct SliceSteppingOut{W <: Real} <: AbstractUnivariateSliceSampling
     window          ::W
@@ -20,7 +20,7 @@ end
 function SliceSteppingOut(
     window          ::Real;
     max_stepping_out::Int = 32,
-    max_proposals   ::Int = typemax(Int),
+    max_proposals   ::Int = DEFAULT_MAX_PROPOSALS,
 )
     @assert window > 0
     SliceSteppingOut(window, max_stepping_out, max_proposals)
