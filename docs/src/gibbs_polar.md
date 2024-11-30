@@ -8,7 +8,6 @@ Unlike other slice sampling algorithms, it operates a Gibbs sampler over polar c
 Due to the involvement of polar coordinates, GPSS only works reliably on more than one dimension.
 However, unlike ESS, GPSS is applicable to any target distribution.
 
-
 ## Description
 For a $$d$$-dimensional target distribution $$\pi$$, GPSS utilizes the following augmented target distribution:
 ```math
@@ -33,6 +32,9 @@ where $$T_n$$ is the usual acceptance threshold auxiliary variable, while $$\the
 The Gibbs steps on $$\theta$$ and $$r$$ are implemented through specialized shrinkage procedures.
 
 The only tunable parameter of the algorithm is the size of the search interval (window) of the shrinkage sampler for the radius variable $$r$$.
+
+!!! warning 
+    A limitation of the current implementation of GPSS is that the acceptance rate exhibits a heavy tail. That is, occasionally, a single transition might take an excessive amount of time.
 
 !!! info
     The kernel corresponding to this sampler is defined on an **augmented state space** and cannot directly perform a transition on $$x$$.
