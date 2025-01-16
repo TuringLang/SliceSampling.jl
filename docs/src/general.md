@@ -81,8 +81,8 @@ using SliceSampling
 end
 
 sampler = Turing.Experimental.Gibbs(
-    p => externalsampler(SliceSteppingOut(2.0)),
-    z => PG(20, :z),
+    :p => externalsampler(SliceSteppingOut(2.0)),
+    :z => PG(20, :z),
 )
 
 n_samples = 1000
