@@ -17,6 +17,13 @@ struct HitAndRunState{T<:Transition}
     transition::T
 end
 
+function AbstractMCMC.setparams!!(
+    model::AbstractMCMC.LogDensityModel, state::HitAndRunState, params
+)
+    lp = LogDensityProblems.logdensity(model.logdensity, params)
+    return HitAndRunState(Transition(params, lp, NamedTuple()))
+end
+
 struct HitAndRunTarget{Model,Vec<:AbstractVector}
     model     :: Model
     direction :: Vec

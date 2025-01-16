@@ -60,8 +60,8 @@ model     = demo()
 sample(model, externalsampler(sampler), n_samples)
 ```
 
-### Conditional sampling in a `Turing.Experimental.Gibbs` sampler
-`SliceSampling.jl` be used as a conditional sampler in `Turing.Experimental.Gibbs`.
+### Conditional sampling in a `Turing.Gibbs` sampler
+`SliceSampling.jl` be used as a conditional sampler in `Turing.Gibbs`.
 
 ```@example turinggibbs
 using Distributions
@@ -80,11 +80,9 @@ using SliceSampling
     end
 end
 
-sampler = Turing.Experimental.Gibbs(
-    (
-        p = externalsampler(SliceSteppingOut(2.0)),
-        z = PG(20, :z)
-    )
+sampler = Turing.Gibbs(
+    :p => externalsampler(SliceSteppingOut(2.0)),
+    :z => PG(20, :z),
 )
 
 n_samples = 1000
