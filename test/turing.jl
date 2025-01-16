@@ -41,9 +41,7 @@
     ]
         sample(
             model,
-            Turing.Experimental.Gibbs((
-                s=externalsampler(sampler), m=externalsampler(sampler)
-            ),),
+            Turing.Gibbs(:s => externalsampler(sampler), :m => externalsampler(sampler)),
             n_samples;
             progress=false,
         )
