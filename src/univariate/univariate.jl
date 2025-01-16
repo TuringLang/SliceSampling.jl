@@ -29,6 +29,15 @@ struct UnivariateSliceState{T<:Transition}
     transition::T
 end
 
+function AbstractMCMC.setparams!!(
+    model::AbstractMCMC.LogDensityModel,
+    state::UnivariateSliceState,
+    params
+)
+    lp = LogDensityProblems.logdensity(model.logdensity, params)
+    return UnivariateSliceState(Transition(params, lp, NamedTuple()))
+end
+
 function AbstractMCMC.step(
     rng::Random.AbstractRNG,
     model::AbstractMCMC.LogDensityModel,

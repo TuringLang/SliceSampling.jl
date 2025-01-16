@@ -6,13 +6,11 @@ if isdefined(Base, :get_extension)
     using Random
     using SliceSampling
     using Turing
-    # using Turing: Turing, Experimental
 else
     using ..LogDensityProblemsAD
     using ..Random
     using ..SliceSampling
     using ..Turing
-    #using ..Turing: Turing, Experimental
 end
 
 # Required for using the slice samplers as `externalsampler`s in Turing
@@ -24,12 +22,18 @@ function Turing.Inference.getparams(
 end
 # end
 
-# Required for using the slice samplers as `Experimental.Gibbs` samplers in Turing
+# Required for using the slice samplers as `Gibbs` samplers in Turing
 # begin
+Turing.Inference.isgibbscomponent(::SliceSampling.RandPermGibbs) = true
+Turing.Inference.isgibbscomponent(::SliceSampling.HitAndRun) = true
+Turing.Inference.isgibbscomponent(::SliceSampling.Slice) = true
+Turing.Inference.isgibbscomponent(::SliceSampling.SliceSteppingOut) = true
+Turing.Inference.isgibbscomponent(::SliceSampling.SliceDoublingOut) = true
+
 function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, state::SliceSampling.UnivariateSliceState
+    ::Turing.DynamicPPL.Model, sample::SliceSampling.UnivariateSliceState
 )
-    return state.transition.params
+    return sample.transition.params
 end
 
 function Turing.Inference.getparams(
@@ -42,18 +46,6 @@ function Turing.Inference.getparams(
     ::Turing.DynamicPPL.Model, state::SliceSampling.HitAndRunState
 )
     return state.transition.params
-end
-
-function Turing.Experimental.gibbs_requires_recompute_logprob(
-    model_dst,
-    ::Turing.DynamicPPL.Sampler{
-        <:Turing.Inference.ExternalSampler{<:SliceSampling.AbstractSliceSampling,A,U}
-    },
-    sampler_src,
-    state_dst,
-    state_src,
-) where {A,U}
-    return false
 end
 # end
 
