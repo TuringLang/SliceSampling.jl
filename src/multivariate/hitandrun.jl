@@ -18,9 +18,7 @@ struct HitAndRunState{T<:Transition}
 end
 
 function AbstractMCMC.setparams!!(
-    model::AbstractMCMC.LogDensityModel,
-    state::HitAndRunState,
-    params
+    model::AbstractMCMC.LogDensityModel, state::HitAndRunState, params
 )
     lp = LogDensityProblems.logdensity(model.logdensity, params)
     return HitAndRunState(Transition(params, lp, NamedTuple()))
