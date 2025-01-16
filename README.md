@@ -42,7 +42,7 @@ model     = demo()
 sample(model, externalsampler(sampler), n_samples)
 ```
 
-The following slice samplers can also be used as a conditional sampler in `Turing.Experimental.Gibbs` sampler:
+The following slice samplers can also be used as a conditional sampler in `Turing.Gibbs` sampler:
 * For multidimensional variables: 
   * `RandPermGibbs`
   * `HitAndRun`
@@ -69,11 +69,9 @@ using SliceSampling
     end
 end
 
-sampler = Turing.Experimental.Gibbs(
-    (
-        p = externalsampler(SliceSteppingOut(2.0)),
-        z = PG(20, :z)
-    )
+sampler = Turing.Gibbs(
+    p => externalsampler(SliceSteppingOut(2.0)),
+    z => PG(20, :z),
 )
 
 n_samples = 1000
