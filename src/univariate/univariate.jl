@@ -30,9 +30,7 @@ struct UnivariateSliceState{T<:Transition}
 end
 
 function AbstractMCMC.setparams!!(
-    model::AbstractMCMC.LogDensityModel,
-    state::UnivariateSliceState,
-    params
+    model::AbstractMCMC.LogDensityModel, state::UnivariateSliceState, params
 )
     lp = LogDensityProblems.logdensity(model.logdensity, params)
     return UnivariateSliceState(Transition(params, lp, NamedTuple()))
