@@ -23,5 +23,3 @@ makedocs(;
         "Gibbsian Polar Slice Sampling" => "gibbs_polar.md",
     ],
 )
-
-deploydocs(; repo="github.com/TuringLang/SliceSampling.jl", push_preview=true)
