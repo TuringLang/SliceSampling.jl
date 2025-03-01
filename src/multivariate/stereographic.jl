@@ -2,7 +2,7 @@
 """
     StereographicSlice(; max_proposals)
 
-Stereographic slice sampling algorithm by Bell, Latuszynski, and Roberts[^BLR].
+Stereographic slice sampling algorithm by Bell, Latuszynski, and Roberts[^BLR2024].
 
 # Keyword Arguments
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
