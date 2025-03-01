@@ -7,8 +7,8 @@ Stereographic slice sampling algorithm by Bell, Latuszynski, and Roberts[^BLR].
 # Keyword Arguments
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
-@kwdef struct StereographicSlice{RType <: Real} <: AbstractMultivariateSliceSampling
-    max_proposals :: Int   = DEFAULT_MAX_PROPOSALS
+@kwdef struct StereographicSlice{RType<:Real} <: AbstractMultivariateSliceSampling
+    max_proposals::Int = DEFAULT_MAX_PROPOSALS
 end
 
 struct StereographicSliceState{T<:Transition}
@@ -22,23 +22,23 @@ function rand_uniform_sphere_orthogonal_subspace(
     z      = subspace_vector
     d      = length(subspace_vector)
     v      = randn(rng, d)
-    v_proj = dot(z, v)/sum(abs2, z)*z
+    v_proj = dot(z, v) / sum(abs2, z) * z
     v_orth = v - v_proj
-    v_orth / norm(v_orth)
+    return v_orth / norm(v_orth)
 end
 
 function stereographic_projection(z::AbstractVector)
     d = length(z) - 1
-    return z[1:d] ./ (1 - z[d+1]) 
+    return z[1:d] ./ (1 - z[d + 1])
 end
 
 function stereographic_inverse_projection(x::AbstractVector)
-    d       = length(x)
-    z       = zeros(d + 1)
-    x_norm2 = sum(abs2, x)
-    z[1:d]  = 2*x / (x_norm2 + 1)
-    z[d+1]  = (x_norm2 - 1)/(x_norm2 + 1)
-    z
+    d        = length(x)
+    z        = zeros(d + 1)
+    x_norm2  = sum(abs2, x)
+    z[1:d]   = 2 * x / (x_norm2 + 1)
+    z[d + 1] = (x_norm2 - 1) / (x_norm2 + 1)
+    return z
 end
 
 function AbstractMCMC.step(
@@ -56,8 +56,8 @@ function AbstractMCMC.step(
 end
 
 function logdensity_sphere(ℓπ::Real, x::AbstractVector)
-    d  = length(x)
-    return ℓπ + d*log(1 + sum(abs2, x))
+    d = length(x)
+    return ℓπ + d * log(1 + sum(abs2, x))
 end
 
 function AbstractMCMC.step(
@@ -85,7 +85,7 @@ function AbstractMCMC.step(
     while true
         props += 1
 
-        x_prop         = stereographic_projection(z*cos(θ) + v*sin(θ))
+        x_prop         = stereographic_projection(z * cos(θ) + v * sin(θ))
         ℓp_prop        = LogDensityProblems.logdensity(logdensitymodel, x_prop)
         ℓp_sphere_prop = logdensity_sphere(ℓp_prop, x_prop)
 
