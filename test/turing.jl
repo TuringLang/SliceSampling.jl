@@ -4,7 +4,8 @@
         s ~ InverseGamma(2, 3)
         m ~ Normal(0, sqrt(s))
         1.5 ~ Normal(m, sqrt(s))
-        return 2.0 ~ Normal(m, sqrt(s))
+        2.0 ~ Normal(m, sqrt(s))
+        return nothing
     end
 
     n_samples = 1000
@@ -19,6 +20,7 @@
         HitAndRun(SliceDoublingOut(1)),
         LatentSlice(5),
         GibbsPolarSlice(5),
+        StereographicSlice(),
     ]
         chain = sample(
             model,

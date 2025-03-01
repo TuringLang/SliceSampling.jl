@@ -74,11 +74,9 @@ end
         HitAndRun(SliceSteppingOut(1)),
         HitAndRun(SliceDoublingOut(1)),
 
-        # Latent slice sampling
         LatentSlice(5),
-
-        # Gibbsian polar slice sampling
         GibbsPolarSlice(100),
+        StereographicSlice(),
     ]
         @testset "initial_params" begin
             model  = MultiModel(1.0, 1.0, [0.0])
