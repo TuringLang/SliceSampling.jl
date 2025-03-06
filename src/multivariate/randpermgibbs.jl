@@ -26,7 +26,7 @@ struct GibbsState{T<:Transition}
 end
 
 function AbstractMCMC.setparams!!(
-    model::AbstractMCMC.LogDensityModel, state::GibbsState, params
+    model::AbstractMCMC.LogDensityModel, ::GibbsState, params
 )
     lp = LogDensityProblems.logdensity(model.logdensity, params)
     return GibbsState(Transition(params, lp, NamedTuple()))

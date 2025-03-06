@@ -7,13 +7,15 @@ Stereographic slice sampling algorithm by Bell, Latuszynski, and Roberts[^BLR202
 # Keyword Arguments
 - `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
 """
-@kwdef struct StereographicSlice{RType<:Real} <: AbstractMultivariateSliceSampling
+@kwdef struct StereographicSlice <: AbstractMultivariateSliceSampling
     max_proposals::Int = DEFAULT_MAX_PROPOSALS
 end
 
-struct StereographicSliceState{T<:Transition}
-    "Current [`Transition`](@ref)."
-    transition::T
+function AbstractMCMC.setparams!!(
+    model::AbstractMCMC.LogDensityModel, ::SliceSampling.Transition, params
+)
+    lp = LogDensityProblems.logdensity(model.logdensity, params)
+    return Transition(params, lp, NamedTuple())
 end
 
 function rand_uniform_sphere_orthogonal_subspace(
