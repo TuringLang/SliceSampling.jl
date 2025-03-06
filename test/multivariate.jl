@@ -74,6 +74,7 @@ end
         HitAndRun(SliceSteppingOut(1)),
         HitAndRun(SliceDoublingOut(1)),
 
+        # Multivariate slice samplers
         LatentSlice(5),
         GibbsPolarSlice(100),
         StereographicSlice(),
