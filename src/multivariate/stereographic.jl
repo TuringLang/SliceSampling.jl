@@ -79,9 +79,9 @@ function AbstractMCMC.step(
     ℓp_sphere = logdensity_sphere(ℓp, x)
     ℓw        = ℓp_sphere - Random.randexp(rng, eltype(x))
 
-    θ     = rand(rng, Uniform(0, 2π))
+    θ     = convert(eltype(x), 2π)*rand(rng)
     θ_max = θ
-    θ_min = θ - 2π
+    θ_min = θ - convert(eltype(x), 2π)
 
     props = 0
     while true
@@ -107,7 +107,7 @@ function AbstractMCMC.step(
             θ_max = θ
         end
 
-        θ = rand(rng, Uniform(θ_min, θ_max))
+        θ = (θ_max - θ_min)*rand(rng)
     end
     t = Transition(x, ℓp, (num_proposals=props,))
     return t, t
