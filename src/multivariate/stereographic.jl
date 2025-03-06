@@ -19,11 +19,11 @@ function AbstractMCMC.setparams!!(
 end
 
 function rand_uniform_sphere_orthogonal_subspace(
-    rng::Random.AbstractRNG, subspace_vector::AbstractVector
-)
+    rng::Random.AbstractRNG, subspace_vector::AbstractVector{T}
+) where {T<:Real}
     z      = subspace_vector
     d      = length(subspace_vector)
-    v      = randn(rng, d)
+    v      = randn(rng, T, d)
     v_proj = dot(z, v) / sum(abs2, z) * z
     v_orth = v - v_proj
     return v_orth / norm(v_orth)
@@ -34,9 +34,9 @@ function stereographic_projection(z::AbstractVector)
     return z[1:d] ./ (1 - z[d + 1])
 end
 
-function stereographic_inverse_projection(x::AbstractVector)
+function stereographic_inverse_projection(x::AbstractVector{T}) where {T<:Real}
     d        = length(x)
-    z        = zeros(d + 1)
+    z        = zeros(T, d + 1)
     x_norm2  = sum(abs2, x)
     z[1:d]   = 2 * x / (x_norm2 + 1)
     z[d + 1] = (x_norm2 - 1) / (x_norm2 + 1)
@@ -79,7 +79,7 @@ function AbstractMCMC.step(
     ℓp_sphere = logdensity_sphere(ℓp, x)
     ℓw        = ℓp_sphere - Random.randexp(rng, eltype(x))
 
-    θ     = convert(eltype(x), 2π)*rand(rng)
+    θ     = convert(eltype(x), 2π) * rand(rng)
     θ_max = θ
     θ_min = θ - convert(eltype(x), 2π)
 
@@ -107,7 +107,7 @@ function AbstractMCMC.step(
             θ_max = θ
         end
 
-        θ = (θ_max - θ_min)*rand(rng)
+        θ = (θ_max - θ_min) * rand(rng)
     end
     t = Transition(x, ℓp, (num_proposals=props,))
     return t, t
