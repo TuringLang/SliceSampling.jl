@@ -79,7 +79,7 @@ function AbstractMCMC.step(
     ℓp_sphere = logdensity_sphere(ℓp, x)
     ℓw        = ℓp_sphere - Random.randexp(rng, eltype(x))
 
-    θ     = convert(eltype(x), 2π) * rand(rng)
+    θ     = convert(eltype(x), 2π) * rand(eltype(x), rng)
     θ_max = θ
     θ_min = θ - convert(eltype(x), 2π)
 
