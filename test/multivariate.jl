@@ -59,7 +59,7 @@ function LogDensityProblems.dimension(model::MultiModel)
 end
 
 @testset "multivariate samplers" begin
-    model = MultiModel(1.0, 1.0, [0.0])
+    model = MultiModel(3.0, 3.0, [0.0])
     @testset for sampler in [
         # Vector-valued windows
         RandPermGibbs(Slice.(fill(1, LogDensityProblems.dimension(model)))),
@@ -77,10 +77,10 @@ end
         # Multivariate slice samplers
         LatentSlice(5),
         GibbsPolarSlice(100),
-        StereographicSlice(),
+        StereographicSlice(1),
     ]
         @testset "initial_params" begin
-            model  = MultiModel(1.0, 1.0, [0.0])
+            model  = MultiModel(3.0, 3.0, [0.0])
             θ, y   = MCMCTesting.sample_joint(Random.default_rng(), model)
             model′ = AbstractMCMC.LogDensityModel(@set model.y = y)
 
@@ -91,7 +91,7 @@ end
 
         @testset "initial_sample" begin
             rng = StableRNG(1)
-            model = MultiModel(1.0, 1.0, [0.0])
+            model = MultiModel(3.0, 3.0, [0.0])
             θ0 = SliceSampling.initial_sample(rng, model)
 
             rng = StableRNG(1)
@@ -100,7 +100,7 @@ end
         end
 
         @testset "determinism" begin
-            model  = MultiModel(1.0, 1.0, [0.0])
+            model  = MultiModel(3.0, 3.0, [0.0])
             θ, y   = MCMCTesting.sample_joint(Random.default_rng(), model)
             model′ = AbstractMCMC.LogDensityModel(@set model.y = y)
 
@@ -139,7 +139,7 @@ end
             n_mcmc_thin      = 10
             test             = ExactRankTest(n_samples, n_mcmc_steps, n_mcmc_thin)
 
-            model   = MultiModel(1.0, 1.0, [0.0])
+            model   = MultiModel(3.0, 3.0, [0.0])
             subject = TestSubject(model, sampler)
             @test seqmcmctest(test, subject, 0.001, n_pvalue_samples; show_progress=false)
         end

@@ -1,14 +1,21 @@
 
 """
-    StereographicSlice(; max_proposals)
+    StereographicSlice(invscale; max_proposals)
 
 Stereographic slice sampling algorithm by Bell, Latuszynski, and Roberts[^BLR2024].
 
 # Keyword Arguments
-- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(DEFAULT_MAX_PROPOSALS)`).
+- `invscale::Real`: Inverse scale of the stereographic projection.
+- `max_proposals::Int`: Maximum number of proposals allowed until throwing an error (default: `$(100*DEFAULT_MAX_PROPOSALS)`).
 """
-@kwdef struct StereographicSlice <: AbstractMultivariateSliceSampling
-    max_proposals::Int = DEFAULT_MAX_PROPOSALS
+struct StereographicSlice{S<:Real} <: AbstractMultivariateSliceSampling
+    invscale::S
+    max_proposals::Int
+end
+
+function StereographicSlice(invscale::Real; max_proposals::Int = 100*DEFAULT_MAX_PROPOSALS)
+    @assert invscale > 0
+    StereographicSlice{typeof(invscale)}(invscale, max_proposals)
 end
 
 function AbstractMCMC.setparams!!(
@@ -29,17 +36,18 @@ function rand_uniform_sphere_orthogonal_subspace(
     return v_orth / norm(v_orth)
 end
 
-function stereographic_projection(z::AbstractVector)
+function stereographic_projection(z::AbstractVector{T}, R::T) where {T<:Real}
     d = length(z) - 1
-    return z[1:d] ./ (1 - z[d + 1])
+    return R * z[1:d] ./ (1 - z[d + 1])
 end
 
-function stereographic_inverse_projection(x::AbstractVector{T}) where {T<:Real}
+function stereographic_inverse_projection(x::AbstractVector{T}, R::T) where {T<:Real}
     d        = length(x)
+    R2       = R*R
     z        = zeros(T, d + 1)
     x_norm2  = sum(abs2, x)
-    z[1:d]   = 2 * x / (x_norm2 + 1)
-    z[d + 1] = (x_norm2 - 1) / (x_norm2 + 1)
+    z[1:d]   = 2 * R * x / (x_norm2 + R2)
+    z[d + 1] = (x_norm2 - R2) / (x_norm2 + R2)
     return z
 end
 
@@ -57,9 +65,9 @@ function AbstractMCMC.step(
     return t, t
 end
 
-function logdensity_sphere(ℓπ::Real, x::AbstractVector)
+function logdensity_sphere(ℓπ::Real, x::AbstractVector{T}, R::T) where {T<:Real}
     d = length(x)
-    return ℓπ + d * log(1 + sum(abs2, x))
+    return ℓπ + d * log(R*R + sum(abs2, x))
 end
 
 function AbstractMCMC.step(
@@ -74,12 +82,13 @@ function AbstractMCMC.step(
 
     ℓp        = state.lp
     x         = state.params
-    z         = stereographic_inverse_projection(x)
+    R         = convert(eltype(x), sampler.invscale)
+    z         = stereographic_inverse_projection(x, R)
     v         = rand_uniform_sphere_orthogonal_subspace(rng, z)
-    ℓp_sphere = logdensity_sphere(ℓp, x)
+    ℓp_sphere = logdensity_sphere(ℓp, x, R)
     ℓw        = ℓp_sphere - Random.randexp(rng, eltype(x))
 
-    θ     = convert(eltype(x), 2π) * rand(eltype(x), rng)
+    θ     = convert(eltype(x), 2π) * rand(rng, eltype(x))
     θ_max = θ
     θ_min = θ - convert(eltype(x), 2π)
 
@@ -87,9 +96,9 @@ function AbstractMCMC.step(
     while true
         props += 1
 
-        x_prop         = stereographic_projection(z * cos(θ) + v * sin(θ))
+        x_prop         = stereographic_projection(z * cos(θ) + v * sin(θ), R)
         ℓp_prop        = LogDensityProblems.logdensity(logdensitymodel, x_prop)
-        ℓp_sphere_prop = logdensity_sphere(ℓp_prop, x_prop)
+        ℓp_sphere_prop = logdensity_sphere(ℓp_prop, x_prop, R)
 
         if ℓw < ℓp_sphere_prop
             ℓp = ℓp_prop
@@ -98,6 +107,7 @@ function AbstractMCMC.step(
         end
 
         if props > max_proposals
+            println(logdensitymodel)
             exceeded_max_prop(max_proposals)
         end
 
@@ -106,8 +116,7 @@ function AbstractMCMC.step(
         else
             θ_max = θ
         end
-
-        θ = (θ_max - θ_min) * rand(rng)
+        θ = (θ_max - θ_min) * rand(rng, eltype(x))
     end
     t = Transition(x, ℓp, (num_proposals=props,))
     return t, t
