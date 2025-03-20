@@ -22,6 +22,7 @@ For general usage, please refer to [here](https://turinglang.org/SliceSampling.j
 ### Multivariate Slice Sampling Algorithms
 - Latent slice sampling ([LSS](https://turinglang.org/SliceSampling.jl/dev/latent_slice/)) by Li and Walker[^LW2023] (`LatentSlice`)
 - Gibbsian polar slice sampling ([GPSS](https://turinglang.org/SliceSampling.jl/dev/gibbs_polar/)) by P. Schär, M. Habeck, and D. Rudolf[^SHR2023] (`GibbsPolarSlice`)
+- Stereographic slice sampling[^BLR2024] (`StereographicSlice`)
 
 ## Example with Turing Models
 This package supports the [Turing](https://github.com/TuringLang/Turing.jl) probabilistic programming framework:
@@ -46,6 +47,7 @@ The following slice samplers can also be used as a conditional sampler in `Turin
 * For multidimensional variables: 
   * `RandPermGibbs`
   * `HitAndRun`
+  * `StereographicSlice`
 * For unidimensional variables: 
   * `Slice`
   * `SliceSteppingOut`
@@ -84,3 +86,4 @@ sample(model, sampler, n_samples)
 [^SHR2023]: Schär, P., Habeck, M., & Rudolf, D. (2023, July). Gibbsian polar slice sampling. In International Conference on Machine Learning.
 [^GG1984]: Geman, S., & Geman, D. (1984). Stochastic relaxation, Gibbs distributions, and the Bayesian restoration of images. IEEE Transactions on Pattern Analysis and Machine Intelligence, (6).
 [^BRS1993]: Bélisle, C. J., Romeijn, H. E., & Smith, R. L. (1993). Hit-and-run algorithms for generating multivariate distributions. Mathematics of Operations Research, 18(2), 255-266.
+[^BLR2024]: Bell, Cameron, Krzystof Łatuszyński, and Gareth O. Roberts. "Adaptive stereographic MCMC." arXiv preprint arXiv:2408.11780 (2024)

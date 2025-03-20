@@ -29,6 +29,7 @@ Turing.Inference.isgibbscomponent(::SliceSampling.HitAndRun) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.Slice) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceSteppingOut) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceDoublingOut) = true
+Turing.Inference.isgibbscomponent(::SliceSampling.StereographicSlice) = true
 
 function Turing.Inference.getparams(
     ::Turing.DynamicPPL.Model, sample::SliceSampling.UnivariateSliceState
