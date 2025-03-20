@@ -107,7 +107,6 @@ function AbstractMCMC.step(
         end
 
         if props > max_proposals
-            println(logdensitymodel)
             exceeded_max_prop(max_proposals)
         end
 
