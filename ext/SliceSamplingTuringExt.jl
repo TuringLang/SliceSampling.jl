@@ -50,20 +50,20 @@ end
 # end
 
 function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDensityFunction)
-    model = ℓ.model
-    spl   = Turing.SampleFromUniform()
-    vi    = Turing.VarInfo(rng, model, spl)
-    θ     = vi[spl]
+    model  = ℓ.model
+    vi     = Turing.VarInfo(rng, model, Turing.SampleFromUniform())
+    vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
+    θ      = vi_spl[:]
 
     init_attempt_count = 1
-    while !isfinite(θ)
+    while !all(isfinite.(θ))
         if init_attempt_count == 10
             @warn "failed to find valid initial parameters in $(init_attempt_count) tries; consider providing explicit initial parameters using the `initial_params` keyword"
         end
 
         # NOTE: This will sample in the unconstrained space.
-        vi = last(DynamicPPL.evaluate!!(model, rng, vi, SampleFromUniform()))
-        θ  = vi[spl]
+        vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
+        θ      = vi_spl[:]
 
         init_attempt_count += 1
     end
