@@ -82,7 +82,7 @@ end
 
 sampler = Turing.Gibbs(
     :p => externalsampler(SliceSteppingOut(2.0)),
-    :z => PG(20, :z),
+    :z => PG(20),
 )
 
 n_samples = 1000
