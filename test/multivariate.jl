@@ -77,7 +77,6 @@ end
         # Multivariate slice samplers
         LatentSlice(5),
         GibbsPolarSlice(100),
-        StereographicSlice(1),
     ]
         @testset "initial_params" begin
             model  = MultiModel(3.0, 3.0, [0.0])

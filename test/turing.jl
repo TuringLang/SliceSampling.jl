@@ -20,7 +20,6 @@
         HitAndRun(SliceDoublingOut(1)),
         LatentSlice(5),
         GibbsPolarSlice(5),
-        StereographicSlice(10),
     ]
         chain = sample(
             model,

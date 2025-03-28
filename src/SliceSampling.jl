@@ -7,7 +7,6 @@ using Distributions
 using FillArrays
 using LinearAlgebra
 using LogDensityProblems
-using LogExpFunctions
 using Random
 
 # The following is necessary because Turing wraps all models with
@@ -116,10 +115,6 @@ include("multivariate/latent.jl")
 # Gibbsian Polar Slice Sampling 
 export GibbsPolarSlice
 include("multivariate/gibbspolar.jl")
-
-# Stereographic Slice Sampling
-export StereographicSlice
-include("multivariate/stereographic.jl")
 
 # Turing Compatibility
 
