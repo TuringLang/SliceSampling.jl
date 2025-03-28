@@ -2,7 +2,7 @@
 # [Gibbsian Polar Slice Sampling](@id polar)
 
 ## Introduction
-Gibbsian polar slice sampling (GPSS) is a recent vector-valued slice sampling algorithm proposed by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
+Gibbsian polar slice sampling (GPSS) is a multivariate slice sampling algorithm proposed by P. Schär, M. Habeck, and D. Rudolf[^SHR2023].
 It is an computationally efficient variant of polar slice sampler previously proposed by Roberts and Rosenthal[^RR2002].
 Unlike other slice sampling algorithms, it operates a Gibbs sampler over polar coordinates, reminiscent of the elliptical slice sampler (ESS).
 Due to the involvement of polar coordinates, GPSS only works reliably on more than one dimension.
