@@ -73,7 +73,7 @@ function AbstractMCMC.step(
     unislices       = if sampler.unislice isa AbstractVector
         sampler.unislice
     else
-        Fill(sampler.unislice, d)
+        fill(sampler.unislice, d)
     end
 
     props = zeros(Int, d)
