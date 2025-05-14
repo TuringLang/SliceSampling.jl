@@ -1,6 +1,10 @@
 
 module SliceSamplingTuringExt
 
+using Random
+using SliceSampling
+using Turing
+
 # Required for using the slice samplers as `externalsampler`s in Turing
 # begin
 function Turing.Inference.getparams(
