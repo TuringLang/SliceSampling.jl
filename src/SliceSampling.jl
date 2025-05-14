@@ -2,16 +2,10 @@
 module SliceSampling
 
 using AbstractMCMC
-using Accessors
 using Distributions
-using FillArrays
 using LinearAlgebra
 using LogDensityProblems
 using Random
-
-# The following is necessary because Turing wraps all models with
-# LogDensityProblemsAD by default. So we need access to these types.
-using LogDensityProblemsAD
 
 # reexports
 using AbstractMCMC: sample, MCMCThreads, MCMCDistributed, MCMCSerial
@@ -57,14 +51,6 @@ function initial_sample(::Random.AbstractRNG, ::Any)
         "`initial_sample` is not implemented but an initialization wasn't provided. ",
         "Consider supplying an initialization to `initial_params`.",
     )
-end
-
-# If target is from `LogDensityProblemsAD`, unwrap target before calling `initial_sample`.
-# This is necessary since Turing wraps `DynamicPPL.Model`s when passed to an `externalsampler`.
-function initial_sample(
-    rng::Random.AbstractRNG, wrap::LogDensityProblemsAD.ADGradientWrapper
-)
-    return initial_sample(rng, parent(wrap))
 end
 
 function exceeded_max_prop(max_prop::Int)
@@ -115,19 +101,5 @@ include("multivariate/latent.jl")
 # Gibbsian Polar Slice Sampling 
 export GibbsPolarSlice
 include("multivariate/gibbspolar.jl")
-
-# Turing Compatibility
-
-if !isdefined(Base, :get_extension)
-    using Requires
-end
-
-@static if !isdefined(Base, :get_extension)
-    function __init__()
-        @require Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0" include(
-            "../ext/SliceSamplingTuringExt.jl"
-        )
-    end
-end
 
 end

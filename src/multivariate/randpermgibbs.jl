@@ -38,7 +38,8 @@ end
 
 function LogDensityProblems.logdensity(gibbs::GibbsTarget, θi)
     (; model, idx, θ) = gibbs
-    return LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
+    θ[idx] = θi
+    return LogDensityProblems.logdensity(model, θ)
 end
 
 function AbstractMCMC.step(
@@ -73,7 +74,7 @@ function AbstractMCMC.step(
     unislices       = if sampler.unislice isa AbstractVector
         sampler.unislice
     else
-        Fill(sampler.unislice, d)
+        fill(sampler.unislice, d)
     end
 
     props = zeros(Int, d)

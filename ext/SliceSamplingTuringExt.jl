@@ -2,12 +2,10 @@
 module SliceSamplingTuringExt
 
 if isdefined(Base, :get_extension)
-    using LogDensityProblemsAD
     using Random
     using SliceSampling
     using Turing
 else
-    using ..LogDensityProblemsAD
     using ..Random
     using ..SliceSampling
     using ..Turing
