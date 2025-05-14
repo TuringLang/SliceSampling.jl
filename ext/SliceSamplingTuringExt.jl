@@ -1,16 +1,6 @@
 
 module SliceSamplingTuringExt
 
-if isdefined(Base, :get_extension)
-    using Random
-    using SliceSampling
-    using Turing
-else
-    using ..Random
-    using ..SliceSampling
-    using ..Turing
-end
-
 # Required for using the slice samplers as `externalsampler`s in Turing
 # begin
 function Turing.Inference.getparams(
