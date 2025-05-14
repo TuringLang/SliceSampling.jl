@@ -103,18 +103,4 @@ include("multivariate/latent.jl")
 export GibbsPolarSlice
 include("multivariate/gibbspolar.jl")
 
-# Turing Compatibility
-
-if !isdefined(Base, :get_extension)
-    using Requires
-end
-
-@static if !isdefined(Base, :get_extension)
-    function __init__()
-        @require Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0" include(
-            "../ext/SliceSamplingTuringExt.jl"
-        )
-    end
-end
-
 end
