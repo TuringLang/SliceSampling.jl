@@ -38,7 +38,8 @@ end
 
 function LogDensityProblems.logdensity(gibbs::GibbsTarget, θi)
     (; model, idx, θ) = gibbs
-    return LogDensityProblems.logdensity(model, (@set θ[idx] = θi))
+    θ[idx] = θi
+    return LogDensityProblems.logdensity(model, θ)
 end
 
 function AbstractMCMC.step(

@@ -1,7 +1,6 @@
 
 module SliceSampling
 
-using Accessors
 using AbstractMCMC
 using Distributions
 using LinearAlgebra
