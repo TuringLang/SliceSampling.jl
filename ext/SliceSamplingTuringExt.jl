@@ -43,7 +43,7 @@ end
 
 function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDensityFunction)
     model  = ℓ.model
-    vi     = Turing.VarInfo(rng, model, Turing.SampleFromUniform())
+    vi     = Turing.DynamicPPL.VarInfo(rng, model, Turing.SampleFromUniform())
     vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
     θ      = vi_spl[:]
 
