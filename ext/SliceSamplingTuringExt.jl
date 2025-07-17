@@ -22,22 +22,15 @@ Turing.Inference.isgibbscomponent(::SliceSampling.Slice) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceSteppingOut) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceDoublingOut) = true
 
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, sample::SliceSampling.UnivariateSliceState
-)
+const SliceSamplingStates = Union{
+    SliceSampling.UnivariateSliceState,
+    SliceSampling.GibbsState,
+    SliceSampling.HitAndRunState,
+    SliceSampling.LatentSliceState,
+    SliceSampling.GibbsPolarSliceState,
+}
+function Turing.Inference.getparams(::Turing.DynamicPPL.Model, sample::SliceSamplingStates)
     return sample.transition.params
-end
-
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, state::SliceSampling.GibbsState
-)
-    return state.transition.params
-end
-
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, state::SliceSampling.HitAndRunState
-)
-    return state.transition.params
 end
 
 function Turing.Inference.getlogp_external(
