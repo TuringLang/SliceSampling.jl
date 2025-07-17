@@ -22,22 +22,21 @@ Turing.Inference.isgibbscomponent(::SliceSampling.Slice) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceSteppingOut) = true
 Turing.Inference.isgibbscomponent(::SliceSampling.SliceDoublingOut) = true
 
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, sample::SliceSampling.UnivariateSliceState
-)
+const SliceSamplingStates = Union{
+    SliceSampling.UnivariateSliceState,
+    SliceSampling.GibbsState,
+    SliceSampling.HitAndRunState,
+    SliceSampling.LatentSliceState,
+    SliceSampling.GibbsPolarSliceState,
+}
+function Turing.Inference.getparams(::Turing.DynamicPPL.Model, sample::SliceSamplingStates)
     return sample.transition.params
 end
 
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, state::SliceSampling.GibbsState
+function Turing.Inference.getlogp_external(
+    ::Turing.DynamicPPL.Model, t::SliceSampling.Transition, state
 )
-    return state.transition.params
-end
-
-function Turing.Inference.getparams(
-    ::Turing.DynamicPPL.Model, state::SliceSampling.HitAndRunState
-)
-    return state.transition.params
+    return t.lp
 end
 # end
 
@@ -45,7 +44,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
     model  = ℓ.model
     vi     = Turing.DynamicPPL.VarInfo(rng, model, Turing.SampleFromUniform())
     vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
-    θ     = vi_spl[:]
+    θ      = vi_spl[:]
 
     init_attempt_count = 1
     while !all(isfinite.(θ))
