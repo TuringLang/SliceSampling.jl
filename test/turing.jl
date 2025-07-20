@@ -8,8 +8,13 @@
         return nothing
     end
 
+    @model function logp_check()
+        a ~ Normal()
+        return b ~ Normal()
+    end
+
     n_samples = 1000
-    model     = demo()
+    model = demo()
 
     @testset for sampler in [
         RandPermGibbs(Slice(1)),
@@ -30,6 +35,15 @@
         )
 
         chain = sample(model, externalsampler(sampler), n_samples; progress=false)
+
+        chain_logp_check = sample(
+            logp_check(), externalsampler(sampler), 100; progress=false
+        )
+        @test isapprox(
+            logpdf.(Normal(), chain_logp_check[:a]) .+
+            logpdf.(Normal(), chain_logp_check[:b]),
+            chain_logp_check[:lp],
+        )
     end
 
     @testset "gibbs($sampler)" for sampler in [
@@ -45,6 +59,18 @@
             Turing.Gibbs(:s => externalsampler(sampler), :m => externalsampler(sampler)),
             n_samples;
             progress=false,
+        )
+
+        chain_logp_check = sample(
+            logp_check(),
+            Turing.Gibbs(:a => externalsampler(sampler), :b => externalsampler(sampler)),
+            100;
+            progress=false,
+        )
+        @test isapprox(
+            logpdf.(Normal(), chain_logp_check[:a]) .+
+            logpdf.(Normal(), chain_logp_check[:b]),
+            chain_logp_check[:lp],
         )
     end
 end
