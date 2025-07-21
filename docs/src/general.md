@@ -57,7 +57,8 @@ end
 sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
-sample(model, externalsampler(sampler), n_samples)
+chain     = sample(model, externalsampler(sampler), n_samples)
+describe(chain)
 ```
 
 ### Conditional sampling in a `Turing.Gibbs` sampler
@@ -87,7 +88,8 @@ sampler = Turing.Gibbs(
 
 n_samples = 1000
 model     = simple_choice([1.5, 2.0, 0.3])
-sample(model, sampler, n_samples)
+chain     = sample(model, sampler, n_samples)
+describe(chain)
 ```
 
 ## Drawing Samples
