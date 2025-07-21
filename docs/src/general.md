@@ -57,7 +57,7 @@ end
 sampler   = RandPermGibbs(SliceSteppingOut(2.))
 n_samples = 10000
 model     = demo()
-chain     = sample(model, externalsampler(sampler), n_samples)
+chain     = sample(model, externalsampler(sampler), n_samples; progress=false)
 describe(chain)
 ```
 
@@ -88,7 +88,7 @@ sampler = Turing.Gibbs(
 
 n_samples = 1000
 model     = simple_choice([1.5, 2.0, 0.3])
-chain     = sample(model, sampler, n_samples)
+chain     = sample(model, sampler, n_samples; progress=false)
 describe(chain)
 ```
 

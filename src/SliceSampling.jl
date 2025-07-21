@@ -68,7 +68,7 @@ function exceeded_max_prop(max_prop::Int)
 end
 
 ## Univariate Slice Sampling Algorithms
-export Slice, SliceSteppingOut, SliceDoublingOut
+export Slice, SliceSteppingOut, SliceDoublingOut, SliceOverrelaxed
 
 abstract type AbstractUnivariateSliceSampling <: AbstractSliceSampling end
 
@@ -84,6 +84,7 @@ include("univariate/univariate.jl")
 include("univariate/fixedinterval.jl")
 include("univariate/steppingout.jl")
 include("univariate/doublingout.jl")
+include("univariate/overrelaxed.jl")
 
 ## Multivariate slice sampling algorithms
 abstract type AbstractMultivariateSliceSampling <: AbstractSliceSampling end
@@ -93,6 +94,7 @@ export RandPermGibbs, HitAndRun
 
 include("multivariate/randpermgibbs.jl")
 include("multivariate/hitandrun.jl")
+include("multivariate/covadaptcrumbs.jl")
 
 # Latent Slice Sampling 
 export LatentSlice
