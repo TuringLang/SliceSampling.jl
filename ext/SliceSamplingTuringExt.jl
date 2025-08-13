@@ -38,7 +38,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
     model  = ℓ.model
     vi     = Turing.DynamicPPL.VarInfo(rng, model, Turing.SampleFromUniform())
     vi_spl = last(Turing.DynamicPPL.evaluate_and_sample!!(rng, model, vi, Turing.SampleFromUniform()))
-    θ     = vi_spl[:]
+    θ      = vi_spl[:]
 
     init_attempt_count = 1
     while !all(isfinite.(θ))
