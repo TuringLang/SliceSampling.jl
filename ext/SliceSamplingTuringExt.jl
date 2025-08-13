@@ -32,19 +32,13 @@ const SliceSamplingStates = Union{
 function Turing.Inference.getparams(::Turing.DynamicPPL.Model, sample::SliceSamplingStates)
     return sample.transition.params
 end
-
-function Turing.Inference.getlogp_external(
-    ::Turing.DynamicPPL.Model, t::SliceSampling.Transition, state
-)
-    return t.lp
-end
 # end
 
 function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDensityFunction)
     model  = ℓ.model
     vi     = Turing.DynamicPPL.VarInfo(rng, model, Turing.SampleFromUniform())
-    vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
-    θ      = vi_spl[:]
+    vi_spl = last(Turing.DynamicPPL.evaluate_and_sample!!(rng, model, vi, Turing.SampleFromUniform()))
+    θ     = vi_spl[:]
 
     init_attempt_count = 1
     while !all(isfinite.(θ))
@@ -53,8 +47,12 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
         end
 
         # NOTE: This will sample in the unconstrained space.
-        vi_spl = last(Turing.DynamicPPL.evaluate!!(model, rng, vi, Turing.SampleFromUniform()))
-        θ      = vi_spl[:]
+        vi_spl = last(
+            Turing.DynamicPPL.evaluate_and_sample!!(
+                rng, model, vi, Turing.SampleFromUniform()
+            ),
+        )
+        θ = vi_spl[:]
 
         init_attempt_count += 1
     end

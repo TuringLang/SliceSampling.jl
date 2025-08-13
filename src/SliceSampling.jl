@@ -1,4 +1,4 @@
-ls
+
 module SliceSampling
 
 using AbstractMCMC
