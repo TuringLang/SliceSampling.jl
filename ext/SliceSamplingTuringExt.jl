@@ -1,6 +1,7 @@
 
 module SliceSamplingTuringExt
 
+using LogDensityProblems
 using Random
 using SliceSampling
 using Turing
@@ -35,15 +36,18 @@ end
 # end
 
 function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDensityFunction)
+    n_max_attempts = 1000
+
     model  = ℓ.model
     vi     = Turing.DynamicPPL.VarInfo(rng, model, Turing.SampleFromUniform())
     vi_spl = last(Turing.DynamicPPL.evaluate_and_sample!!(rng, model, vi, Turing.SampleFromUniform()))
     θ      = vi_spl[:]
+    ℓp     = LogDensityProblems.logdensity(ℓ, θ)
 
     init_attempt_count = 1
-    while !all(isfinite.(θ))
-        if init_attempt_count == 10
-            @warn "failed to find valid initial parameters in $(init_attempt_count) tries; consider providing explicit initial parameters using the `initial_params` keyword"
+    for attempts in 1:n_max_attempts
+        if attempts == 10
+            @warn "Failed to find valid initial parameters after $(init_attempt_count) attempts; consider providing explicit initial parameters using the `initial_params` keyword"
         end
 
         # NOTE: This will sample in the unconstrained space.
@@ -52,10 +56,15 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
                 rng, model, vi, Turing.SampleFromUniform()
             ),
         )
-        θ = vi_spl[:]
+        θ  = vi_spl[:]
+        ℓp = LogDensityProblems.logdensity(ℓ, θ)
 
-        init_attempt_count += 1
+        if all(isfinite.(θ)) && isfinite(ℓp)
+            return θ
+        end
     end
+
+    @error "Failed to find valid initial parameters after $(n_max_attempts) attempts; consider providing explicit initial parameters using the `initial_params` keyword"
     return θ
 end
 
