@@ -56,7 +56,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
                 rng, model, vi, Turing.SampleFromUniform()
             ),
         )
-        θ  = vi_spl[:]
+        θ = vi_spl[:]
         ℓp = LogDensityProblems.logdensity(ℓ, θ)
 
         if all(isfinite.(θ)) && isfinite(ℓp)
