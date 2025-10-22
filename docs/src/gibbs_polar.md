@@ -63,8 +63,9 @@ end
 model = demo()
 
 n_samples = 1000
-latent_chain = sample(model, externalsampler(LatentSlice(10)), n_samples; initial_params=ones(10))
-polar_chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=ones(10))
+initial_params = InitFromParams((x = ones(10),))
+latent_chain = sample(model, externalsampler(LatentSlice(10)), n_samples; initial_params=initial_params)
+polar_chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=initial_params)
 
 l = @layout [a; b]
 p1 = Plots.plot(1:n_samples, latent_chain[:,1,:], ylims=[-10,10], label="LSS")
