@@ -51,7 +51,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
         # NOTE: This will sample in the unconstrained space.
         vi_spl = last(
             Turing.DynamicPPL.init!!(
-                rng, model, vi_spl, Turing.InitFromUniform()
+                rng, model, vi, Turing.InitFromUniform()
             ),
         )
         ℓp = Turing.DynamicPPL.getlogjoint_internal(vi_spl)
