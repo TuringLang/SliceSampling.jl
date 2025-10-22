@@ -42,7 +42,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
     vi_spl = last(
         Turing.DynamicPPL.init!!(rng, model, vi, Turing.DynamicPPL.InitFromUniform())
     )
-    ℓp = Turing.DynamicPPL.getlogjoint_internal(vi_spl)
+    ℓp = ℓ.getlogdensity(vi_spl)
 
     init_attempt_count = 1
     for attempts in 1:n_max_attempts
@@ -52,7 +52,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
 
         # NOTE: This will sample in the unconstrained space if ℓ.varinfo is linked
         vi_spl = last(Turing.DynamicPPL.init!!(rng, model, vi, Turing.InitFromUniform()))
-        ℓp = Turing.DynamicPPL.getlogjoint_internal(vi_spl)
+        ℓp = ℓ.getlogdensity(vi_spl)
         θ = vi_spl[:]
 
         if all(isfinite.(θ)) && isfinite(ℓp)
