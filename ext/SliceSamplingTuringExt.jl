@@ -48,7 +48,7 @@ function SliceSampling.initial_sample(rng::Random.AbstractRNG, ℓ::Turing.LogDe
             @warn "Failed to find valid initial parameters after $(init_attempt_count) attempts; consider providing explicit initial parameters using the `initial_params` keyword"
         end
 
-        # NOTE: This will sample in the unconstrained space.
+        # NOTE: This will sample in the unconstrained space if ℓ.varinfo is linked
         vi_spl = last(
             Turing.DynamicPPL.init!!(
                 rng, model, vi, Turing.InitFromUniform()
