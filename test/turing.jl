@@ -49,7 +49,7 @@
             model,
             externalsampler(sampler),
             n_samples;
-            initial_params=[1.0, 0.1],
+            initial_params=InitFromParams((s=1.0, m=0.1)),
             progress=false,
         )
 
