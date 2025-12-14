@@ -2,6 +2,7 @@
 module SliceSampling
 
 using AbstractMCMC
+using Accessors: Accessors
 using Distributions
 using LinearAlgebra
 using LogDensityProblems
@@ -35,6 +36,22 @@ struct Transition{P,L<:Real,I<:NamedTuple}
 
     "information generated from the sampler"
     info::I
+end
+
+"""
+    abstract type AbstractStateWithTransition
+
+Base type for MCMC states that contain a `Transition` stored in the `transition` field.
+"""
+abstract type AbstractStateWithTransition end
+AbstractMCMC.getparams(state::AbstractStateWithTransition) = state.transition.params
+AbstractMCMC.getstats(state::AbstractStateWithTransition) = state.transition.info
+function AbstractMCMC.setparams!!(
+    model::AbstractMCMC.LogDensityModel, state::AbstractStateWithTransition, params
+)
+    new_lp = LogDensityProblems.logdensity(model.logdensity, params)
+    new_transition = Transition(params, new_lp, NamedTuple())
+    return Accessors.@set state.transition = new_transition
 end
 
 """

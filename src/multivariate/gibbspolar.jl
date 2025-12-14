@@ -29,7 +29,8 @@ function GibbsPolarSlice(w::Real; max_proposals::Int=DEFAULT_MAX_PROPOSALS)
     return GibbsPolarSlice(w, max_proposals)
 end
 
-struct GibbsPolarSliceState{T<:Transition,R<:Real,D<:AbstractVector}
+struct GibbsPolarSliceState{T<:Transition,R<:Real,D<:AbstractVector} <:
+       AbstractStateWithTransition
     "Current [`Transition`](@ref)."
     transition::T
 

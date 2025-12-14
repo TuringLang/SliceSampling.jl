@@ -20,7 +20,7 @@ function LatentSlice(beta::Real; max_proposals::Int=DEFAULT_MAX_PROPOSALS)
     return LatentSlice(beta, max_proposals)
 end
 
-struct LatentSliceState{T<:Transition,S<:AbstractVector}
+struct LatentSliceState{T<:Transition,S<:AbstractVector} <: AbstractStateWithTransition
     "Current [`Transition`](@ref)."
     transition::T
 

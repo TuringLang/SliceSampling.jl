@@ -1,9 +1,10 @@
 name = "SliceSampling"
 uuid = "43f4d3e8-9711-4a8c-bd1b-03ac73a255cf"
-version = "0.7.10"
+version = "0.7.11"
 
 [deps]
 AbstractMCMC = "80f14c24-f653-4e6a-9b94-39d6b0f70001"
+Accessors = "7d9f7c33-5ae7-4f3b-8dc6-eff91059b697"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 LogDensityProblems = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
@@ -16,12 +17,13 @@ Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
 SliceSamplingTuringExt = ["Turing"]
 
 [compat]
-AbstractMCMC = "4, 5"
+AbstractMCMC = "5.9"
+Accessors = "0.1"
 Distributions = "0.25"
 LinearAlgebra = "1"
 LogDensityProblems = "2"
 Random = "1"
-Turing = "0.41"
+Turing = "0.42"
 julia = "1.10"
 
 [extras]
