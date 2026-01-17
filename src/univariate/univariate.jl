@@ -24,16 +24,9 @@ function slice_sampling_univariate(
     return exceeded_max_prop(max_prop)
 end
 
-struct UnivariateSliceState{T<:Transition}
+struct UnivariateSliceState{T<:Transition} <: AbstractStateWithTransition
     "Current [`Transition`](@ref)."
     transition::T
-end
-
-function AbstractMCMC.setparams!!(
-    model::AbstractMCMC.LogDensityModel, state::UnivariateSliceState, params
-)
-    lp = LogDensityProblems.logdensity(model.logdensity, params)
-    return UnivariateSliceState(Transition(params, lp, NamedTuple()))
 end
 
 function AbstractMCMC.step(

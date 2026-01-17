@@ -20,14 +20,9 @@ struct RandPermGibbs{
     unislice::S
 end
 
-struct GibbsState{T<:Transition}
+struct GibbsState{T<:Transition} <: AbstractStateWithTransition
     "Current [`Transition`](@ref)."
     transition::T
-end
-
-function AbstractMCMC.setparams!!(model::AbstractMCMC.LogDensityModel, ::GibbsState, params)
-    lp = LogDensityProblems.logdensity(model.logdensity, params)
-    return GibbsState(Transition(params, lp, NamedTuple()))
 end
 
 struct GibbsTarget{Model,Idx<:Integer,Vec<:AbstractVector}
