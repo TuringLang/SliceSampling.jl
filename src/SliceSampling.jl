@@ -38,11 +38,7 @@ struct Transition{P,L<:Real,I<:NamedTuple}
     info::I
 end
 
-"""
-    abstract type AbstractStateWithTransition
-
-Base type for MCMC states that contain a `Transition` stored in the `transition` field.
-"""
+# Base type for MCMC states that contain a `Transition` stored in the `transition` field.
 abstract type AbstractStateWithTransition end
 AbstractMCMC.getparams(state::AbstractStateWithTransition) = state.transition.params
 AbstractMCMC.getstats(state::AbstractStateWithTransition) = state.transition.info
