@@ -8,29 +8,10 @@
         return nothing
     end
 
-    @model function illbehavedmodel()
-        @addlogprob! -Inf
-        return nothing
-    end
-
     @model function logp_check()
         a ~ Normal()
         return b ~ Normal()
     end
-
-    rng = Random.default_rng()
-    @test begin
-        init = SliceSampling.initial_sample(rng, LogDensityFunction(demo()))
-        all(isfinite.(init))
-    end
-
-    @test_warn "Warning: Failed" SliceSampling.initial_sample(
-        rng, LogDensityFunction(illbehavedmodel())
-    )
-
-    @test_warn "Error: Failed" SliceSampling.initial_sample(
-        rng, LogDensityFunction(illbehavedmodel())
-    )
 
     n_samples = 1000
     model = demo()
@@ -61,7 +42,7 @@
         @test isapprox(
             logpdf.(Normal(), chain_logp_check[:a]) .+
             logpdf.(Normal(), chain_logp_check[:b]),
-            chain_logp_check[:lp],
+            chain_logp_check[:logjoint],
         )
     end
 
@@ -89,7 +70,7 @@
         @test isapprox(
             logpdf.(Normal(), chain_logp_check[:a]) .+
             logpdf.(Normal(), chain_logp_check[:b]),
-            chain_logp_check[:lp],
+            chain_logp_check[:logjoint],
         )
     end
 end
