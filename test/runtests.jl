@@ -14,4 +14,4 @@ using SliceSampling
 include("univariate.jl")
 include("multivariate.jl")
 include("maxprops.jl")
-include("turing.jl")
+include("dynamicppl.jl")
