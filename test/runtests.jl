@@ -5,9 +5,9 @@ using Distributions
 using LogDensityProblems
 using MCMCTesting
 using Random
+using StableRNGs
 using Test
 using Turing
-using StableRNGs
 
 using SliceSampling
 
