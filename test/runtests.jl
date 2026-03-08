@@ -2,12 +2,12 @@
 using AbstractMCMC
 using Accessors
 using Distributions
+using DynamicPPL
 using LogDensityProblems
 using MCMCTesting
 using Random
-using Test
-using Turing
 using StableRNGs
+using Test
 
 using SliceSampling
 
