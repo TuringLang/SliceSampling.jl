@@ -68,8 +68,8 @@ latent_chain = sample(model, externalsampler(LatentSlice(10)), n_samples; initia
 polar_chain = sample(model, externalsampler(GibbsPolarSlice(10)), n_samples; initial_params=initial_params)
 
 l = @layout [a; b]
-p1 = Plots.plot(1:n_samples, latent_chain[:,1,:], ylims=[-10,10], label="LSS")
-p2 = Plots.plot(1:n_samples, polar_chain[:,1,:],  ylims=[-10,10], label="GPSS")
+p1 = Plots.plot(1:n_samples, latent_chain[@varname(x[1])], ylims=[-10,10], label="LSS")
+p2 = Plots.plot(1:n_samples, polar_chain[@varname(x[1])],  ylims=[-10,10], label="GPSS")
 plot(p1, p2, layout = l)
 savefig("student_latent_gpss.svg")
 ```
