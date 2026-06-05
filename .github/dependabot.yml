@@ -21,4 +21,3 @@ updates:
       all-julia-packages:
         patterns:
           - "*"
-        group-by: dependency-name
