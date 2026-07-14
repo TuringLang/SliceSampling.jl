@@ -1,3 +1,8 @@
+module SliceSamplingTuringTests
+
+using SliceSampling
+using Test
+using Turing
 
 @testset "turing compatibility" begin
     @model function demo()
@@ -74,3 +79,5 @@
         )
     end
 end
+
+end # module
